@@ -61,6 +61,29 @@ public class TaskEntry {
     }
 
     @Ignore
+    public TaskEntry(boolean completed) {
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.priority = priority;
+        this.completed = completed;
+        this.updatedAt = updatedAt;
+        this.dueDate = dueDate;
+    }
+
+
+    @Ignore
+    public TaskEntry(String title, String description, int priority, boolean completed) {
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.priority = priority;
+        this.completed = completed;
+        this.updatedAt = updatedAt;
+        this.dueDate = dueDate;
+    }
+
+    @Ignore
     public TaskEntry(String title, String description, int priority, boolean completed, Date updatedAt, Date dueDate) {
         this.title = title;
         this.description = description;

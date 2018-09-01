@@ -1,5 +1,6 @@
 package com.arunditti.android.todolist.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -8,10 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -21,6 +25,8 @@ import com.arunditti.android.todolist.R;
 import com.arunditti.android.todolist.database.AppDatabase;
 import com.arunditti.android.todolist.database.TaskEntry;
 import com.arunditti.android.todolist.ui.activities.AddTaskActivity;
+import com.arunditti.android.todolist.utils.AppExecutors;
+import com.firebase.ui.auth.AuthUI;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -31,6 +37,8 @@ import java.util.Locale;
  */
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+
+    private static final String LOG_TAG = AddTaskActivity.class.getSimpleName();
 
     // Constant for date format
     private static final String DATE_FORMAT = "dd/MM/yyy";
@@ -44,6 +52,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
     private boolean isCompleted;
     private AppDatabase mDb;
+    private static final int DEFAULT_TASK_ID = -1;
+    private int mTaskId = DEFAULT_TASK_ID;
+
 
     public interface ItemClickListener {
         void onItemClickListener(int itemId);
@@ -61,18 +72,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return new TaskViewHolder(view);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onBindViewHolder(@NonNull final TaskAdapter.TaskViewHolder holder, int position) {
 
         //Determine the values of the wanted data
         final TaskEntry taskEntry = mTaskEntries.get(position);
-        String title = taskEntry.getTitle();
-        String description = taskEntry.getDescription();
+        final String title = taskEntry.getTitle();
+        final String description = taskEntry.getDescription();
         final String category = taskEntry.getCategory();
-        int priority = taskEntry.getPriority();
+        final int priority = taskEntry.getPriority();
 
-        String updatedAt = dateFormat.format(taskEntry.getUpdatedAt());
-        String dueDate = dateFormat.format(taskEntry.getDueDate());
+        final String updatedAt = dateFormat.format(taskEntry.getUpdatedAt());
+        final String dueDate = dateFormat.format(taskEntry.getDueDate());
 //        isCompleted = taskEntry.getCompleted();
 
         //Set values
@@ -89,23 +101,50 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         int priorityColor = getPriorityColor(priority);
         priorityCircle.setColor(priorityColor);
 
+        //holder.checkBoxView.setTag(position);
         isCompleted = taskEntry.getCompleted();
         holder.checkBoxView.setChecked(isCompleted);
+ //       holder.bind(position);
 
-        holder.checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(mContext, "hi this is a toast msg", Toast.LENGTH_SHORT).show();
+//        holder.checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
+//
+////                if(buttonView.isChecked()) {
+////                    isCompleted = TaskEntry.TASK_COMPLETED;
+////                } else {
+////                    isCompleted = TaskEntry.TASK_NOT_COMPLETED;
+////                }
+////                buttonView.setChecked(isCompleted);
+//
+//
+//                Toast.makeText(mContext, "hi this is a toast msg", Toast.LENGTH_SHORT).show();
+//
+//                final TaskEntry task = new TaskEntry(title, description, priority, isCompleted);
+//                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+////                        int position = (int) buttonView.getTag();
+////                        Log.d(LOG_TAG, "position is " + position);
+////                        List<TaskEntry> tasks = getTasks();
+////                        //Log.d(LOG_TAG, "position is " + task);
+////                       //tasks.get(position);
+////                        Log.d(LOG_TAG, "position is********************************* " + tasks);
+////                        mDb.taskDao().updateTask( getTasks().get(position));
+////
+//                        int position = (int) buttonView.getTag();
+//                        task.setId(position);
+//                        //Log.d(LOG_TAG, "position is********************************* " + tasks);
+//                        mDb.taskDao().updateTask(task);
+//
+//                    }
+//                });
+//            }
+//        });
+//        mDb = AppDatabase.getInstance(mContext.getApplicationContext());
 
-               if(buttonView.isChecked()) {
-                   isCompleted = taskEntry.TASK_COMPLETED;
 
-               } else
-                   isCompleted = taskEntry.TASK_NOT_COMPLETED;
-
-                buttonView.setChecked(isCompleted);
-            }
-        });
     }
 
     /*
@@ -160,14 +199,33 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             priorityView = itemView.findViewById(R.id.tv_priority);
             checkBoxView = itemView.findViewById(R.id.completed);
             itemView.setOnClickListener(this);
-            //checkBoxView.setOnClickListener(this);
-
+            checkBoxView.setOnClickListener(this);
         }
+//
+//        void bind(int position) {
+//            // check the state of the model
+//            if (!mTaskEntries.get(position).getCompleted()) {
+//                checkBoxView.setChecked(false);}
+//            else {
+//                checkBoxView.setChecked(true);
+//            }
+//            checkBoxView.setText(String.valueOf(mTaskEntries.get(position).getId()));
+//        }
+
 
         @Override
         public void onClick(View v) {
             int elementId = mTaskEntries.get(getAdapterPosition()).getId();
             mItemClickListener.onItemClickListener(elementId);
+
+//            int adapterPosition = getAdapterPosition();
+//            if (mTaskEntries.get(adapterPosition).getCompleted()) {
+//                checkBoxView.setChecked(false);
+//                mTaskEntries.get(adapterPosition).setCompleted(false);
+//            } else {
+//                checkBoxView.setChecked(true);
+//                mTaskEntries.get(adapterPosition).setCompleted(true);
+//            }
         }
     }
 

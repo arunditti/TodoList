@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
     private AppDatabase mDb;
 
+    View emptyView;
+
     public static final int RC_SIGN_IN = 1;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -82,10 +84,13 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
         // Set the RecyclerView to its corresponding view
         mRecyclerView = findViewById(R.id.rv_tasks_list);
+        emptyView = findViewById(R.id.empty_view);
 
         // Set the layout for the RecyclerView to be a linear layout, which measures and
         // positions items within a RecyclerView into a linear list
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
 
         // Initialize the adapter and attach it to the RecyclerView
         mAdapter = new TaskAdapter(this, this);
@@ -202,10 +207,20 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             public void onChanged(@Nullable List<TaskEntry> taskEntries) {
                 Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
                 mAdapter.setTasks(taskEntries);
+                setEmptyView(taskEntries);
             }
         });
     }
 
+    public void setEmptyView(List<TaskEntry> taskEntries) {
+        if (taskEntries.isEmpty()) {
+            mRecyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public void onItemClickListener(int itemId) {
@@ -214,4 +229,5 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         intent.putExtra(AddTaskActivity.EXTRA_TASK_ID, itemId);
         startActivity(intent);
     }
+
 }

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -183,6 +184,7 @@ public class AddTaskActivity extends AppCompatActivity {
                 } else {
                     //update task
                     task.setId(mTaskId);
+                    Log.d(LOG_TAG, "**********************************position is " + task);
                     mDb.taskDao().updateTask(task);
                 }
                 finish();
