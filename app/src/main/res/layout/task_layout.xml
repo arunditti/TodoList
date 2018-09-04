@@ -72,6 +72,12 @@
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"/>
 
+        <TextView
+            android:id="@+id/tv_due_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="11/11/1111"/>
+
     </LinearLayout>
 
     <!-- A priority circle that is colored in programmatically in the adapter code -->

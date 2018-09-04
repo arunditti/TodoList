@@ -1,5 +1,6 @@
 package com.arunditti.android.todolist.ui.activities;
 
+import android.app.DatePickerDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -12,8 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arunditti.android.todolist.R;
@@ -23,9 +26,12 @@ import com.arunditti.android.todolist.utils.AppExecutors;
 import com.arunditti.android.todolist.viewModel.AddTaskViewModel;
 import com.arunditti.android.todolist.viewModel.AddTaskViewModelFactory;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
-public class AddTaskActivity extends AppCompatActivity {
+public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private static final String LOG_TAG = AddTaskActivity.class.getSimpleName();
 
@@ -39,8 +45,11 @@ public class AddTaskActivity extends AppCompatActivity {
     public static final int PRIORITY_LOW = 3;
     // Constant for default task id to be used when not in update mode
     private static final int DEFAULT_TASK_ID = -1;
-    // Constant for logging
-    private static final String TAG = AddTaskActivity.class.getSimpleName();
+    // Constant for date format
+    private static final String DATE_FORMAT = "dd/MM/yyy";
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
+
     // Fields for views
     EditText mEditTextTitle;
     EditText mEditTextDescription;
@@ -49,6 +58,13 @@ public class AddTaskActivity extends AppCompatActivity {
     AppCompatCheckBox mCheckbox;
     private boolean isCompleted;
 
+    private Date mDate;
+    private Calendar mCalender;
+    Button mDateDialog;
+    private DatePickerDialog mDatePickerDialog;
+    private Date mDueDate;
+
+    private TextView mTextViewDueDate;
     private int mTaskId = DEFAULT_TASK_ID;
 
     // Create AppDatabase member variable for the Database
@@ -72,6 +88,7 @@ public class AddTaskActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_TASK_ID)) {
             mButton.setText(R.string.update_button);
+
             if (mTaskId == DEFAULT_TASK_ID) {
                 // populate the UI
                 //  Assign the value of EXTRA_TASK_ID in the intent to mTaskId
@@ -111,6 +128,23 @@ public class AddTaskActivity extends AppCompatActivity {
         mEditTextDescription = findViewById(R.id.editTextTaskDescription);
         mRadioGroup = findViewById(R.id.radioGroup);
         mCheckbox = findViewById(R.id.completed);
+        mTextViewDueDate = findViewById(R.id.tv_due_date);
+
+        mCalender = Calendar.getInstance();
+
+        mDatePickerDialog = new DatePickerDialog(this, AddTaskActivity.this,
+                mCalender.get(Calendar.YEAR),
+                mCalender.get(Calendar.MONTH),
+                mCalender.get(Calendar.DAY_OF_MONTH));
+
+
+        mDateDialog = findViewById(R.id.button_date);
+        mDateDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatePickerDialog.show();
+            }
+        });
 
         mButton = findViewById(R.id.button_save);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +178,15 @@ public class AddTaskActivity extends AppCompatActivity {
 //            isCompleted = TaskEntry.TASK_NOT_COMPLETED;
 //        }
         mCheckbox.setChecked(isCompleted);
+
+
+        final String dueDate = dateFormat.format(task.getDueDate());
+        if(dueDate.isEmpty()) {
+            mTextViewDueDate.setText("");
+        } else {
+            mTextViewDueDate.setText(dueDate);
+        }
+
     }
 
     /**
@@ -157,10 +200,17 @@ public class AddTaskActivity extends AppCompatActivity {
         String description = mEditTextDescription.getText().toString();
         //Create a priority variable and assign the value returned by getPriorityFromViews()
         int priority = getPriorityFromViews();
-        // Create a date variable and assign to it the current Date
-        Date date = new Date();
-        final boolean completed;
 
+        // Create a date variable and assign to it the current Date
+        mDate = new Date();
+
+        //mDatePickerDialog.updateDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
+
+        mDueDate = mCalender.getTime();
+       // onDateSet(mDatePickerDialog.getDatePicker(), Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
+        Log.d(LOG_TAG, "************* due date is: " + mDueDate);
+
+        final boolean completed;
         if(mCheckbox.isChecked()) {
             completed = TaskEntry.TASK_COMPLETED;
         } else {
@@ -169,7 +219,7 @@ public class AddTaskActivity extends AppCompatActivity {
         mCheckbox.setChecked(completed);
 
         //Make taskEntry final so it is visible inside the run method
-        final TaskEntry task = new TaskEntry(title, description, priority, completed, date, date);
+        final TaskEntry task = new TaskEntry(title, description, priority, completed, mDate, mDueDate);
         //  Get the diskIO Executor from the instance of AppExecutors and
         // call the diskIO execute method with a new Runnable and implement its run method
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
@@ -227,5 +277,13 @@ public class AddTaskActivity extends AppCompatActivity {
             case PRIORITY_LOW:
                 ((RadioGroup) findViewById(R.id.radioGroup)).check(R.id.radButton3);
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        mCalender.set(Calendar.YEAR, year);
+        mCalender.set(Calendar.MONTH, month);
+        mCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        mDueDate = mCalender.getTime();
     }
 }

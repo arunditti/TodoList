@@ -85,13 +85,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         final String updatedAt = dateFormat.format(taskEntry.getUpdatedAt());
         final String dueDate = dateFormat.format(taskEntry.getDueDate());
-//        isCompleted = taskEntry.getCompleted();
 
         //Set values
         holder.titleView.setText(title);
         holder.descriptionView.setText(description);
+
         holder.updatedAtView.setText(updatedAt);
         holder.dueDateView.setText(dueDate);
+
+//        if(!dueDate.isEmpty()) {
+//            holder.dueDateView.setText(dueDate);
+//        } else {
+//            holder.dueDateView.setText(" ");
+//        }
 
         //Programmatically set the text and color for the priority TextView
         String priorityString = "" + priority;

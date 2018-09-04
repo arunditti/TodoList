@@ -105,6 +105,22 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
 
+        <Button
+            android:id="@+id/button_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/set_date"/>
+
+        <TextView
+            android:id="@+id/tv_due_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Due Date:"/>
+
+
+
         <!-- Add button -->
     <Button
         android:id="@+id/button_save"
