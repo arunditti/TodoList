@@ -53,6 +53,14 @@
             android:textColor="@android:color/primary_text_light"
             tools:text="Description" />
 
+        <TextView
+            android:id="@+id/tv_category"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/primary_text_light"
+            tools:text="Category" />
+
         <!-- TextView that displays the update date -->
         <TextView
             android:id="@+id/tv_taskUpdatedAt"

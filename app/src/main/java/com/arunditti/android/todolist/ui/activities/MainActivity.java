@@ -26,6 +26,7 @@ import com.arunditti.android.todolist.ui.adapter.TaskAdapter;
 import com.arunditti.android.todolist.utils.AppExecutors;
 import com.arunditti.android.todolist.viewModel.MainViewModel;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     private RecyclerView mRecyclerView;
     private TaskAdapter mAdapter;
 
+   // private TaskRepository mTaskRepository;
     private AppDatabase mDb;
 
     View emptyView;

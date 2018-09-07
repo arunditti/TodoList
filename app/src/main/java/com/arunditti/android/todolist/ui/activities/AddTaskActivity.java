@@ -10,23 +10,28 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arunditti.android.todolist.R;
 import com.arunditti.android.todolist.database.AppDatabase;
 import com.arunditti.android.todolist.database.TaskEntry;
+import com.arunditti.android.todolist.ui.fragments.DatePickerFragment;
 import com.arunditti.android.todolist.utils.AppExecutors;
 import com.arunditti.android.todolist.viewModel.AddTaskViewModel;
 import com.arunditti.android.todolist.viewModel.AddTaskViewModelFactory;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -53,6 +58,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     // Fields for views
     EditText mEditTextTitle;
     EditText mEditTextDescription;
+    Spinner mSpinnerCategory;
     RadioGroup mRadioGroup;
     Button mButton;
     AppCompatCheckBox mCheckbox;
@@ -67,14 +73,32 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private TextView mTextViewDueDate;
     private int mTaskId = DEFAULT_TASK_ID;
 
+    Spinner spinner;
+    private String[] categories = {
+            "Groceries",
+            "Shopping",
+            "School",
+            "Assignments"
+    };
+
+    public ArrayList<String> spinnerList = new ArrayList<>(Arrays.asList(categories));
+
     // Create AppDatabase member variable for the Database
     // Member variable for the Database
     private AppDatabase mDb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
+
+        spinner = findViewById(R.id.spinner);
+
+        // Category spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
         initViews();
 
@@ -126,23 +150,25 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private void initViews() {
         mEditTextTitle = findViewById(R.id.editTextTaskTitle);
         mEditTextDescription = findViewById(R.id.editTextTaskDescription);
+        mSpinnerCategory = findViewById(R.id.spinner);
         mRadioGroup = findViewById(R.id.radioGroup);
         mCheckbox = findViewById(R.id.completed);
         mTextViewDueDate = findViewById(R.id.tv_due_date);
 
         mCalender = Calendar.getInstance();
-
-        mDatePickerDialog = new DatePickerDialog(this, AddTaskActivity.this,
-                mCalender.get(Calendar.YEAR),
-                mCalender.get(Calendar.MONTH),
-                mCalender.get(Calendar.DAY_OF_MONTH));
+//
+//        mDatePickerDialog = new DatePickerDialog(this, AddTaskActivity.this,
+//                mCalender.get(Calendar.YEAR),
+//                mCalender.get(Calendar.MONTH),
+//                mCalender.get(Calendar.DAY_OF_MONTH));
 
 
         mDateDialog = findViewById(R.id.button_date);
         mDateDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDatePickerDialog.show();
+                //mDatePickerDialog.show();
+                showDatePickerDialog();
             }
         });
 
@@ -169,6 +195,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         // use the variable task to populate the UI
         mEditTextTitle.setText(task.getTitle());
         mEditTextDescription.setText(task.getDescription());
+        mSpinnerCategory.setSelection(spinnerList.indexOf(task.getCategory()));
         setPriorityInViews(task.getPriority());
 
         isCompleted = task.getCompleted();
@@ -178,7 +205,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 //            isCompleted = TaskEntry.TASK_NOT_COMPLETED;
 //        }
         mCheckbox.setChecked(isCompleted);
-
 
         final String dueDate = dateFormat.format(task.getDueDate());
         if(dueDate.isEmpty()) {
@@ -198,6 +224,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         String title = mEditTextTitle.getText().toString();
         // Create a description variable and assign to it the value in the edit text
         String description = mEditTextDescription.getText().toString();
+
+        String category = spinner.getSelectedItem().toString();
         //Create a priority variable and assign the value returned by getPriorityFromViews()
         int priority = getPriorityFromViews();
 
@@ -207,8 +235,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         //mDatePickerDialog.updateDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
 
         mDueDate = mCalender.getTime();
-       // onDateSet(mDatePickerDialog.getDatePicker(), Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
-        Log.d(LOG_TAG, "************* due date is: " + mDueDate);
+       // Log.d(LOG_TAG, "************* due date is: " + mDueDate);
 
         final boolean completed;
         if(mCheckbox.isChecked()) {
@@ -219,7 +246,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         mCheckbox.setChecked(completed);
 
         //Make taskEntry final so it is visible inside the run method
-        final TaskEntry task = new TaskEntry(title, description, priority, completed, mDate, mDueDate);
+        final TaskEntry task = new TaskEntry(title, description, category, priority, completed, mDate, mDueDate);
         //  Get the diskIO Executor from the instance of AppExecutors and
         // call the diskIO execute method with a new Runnable and implement its run method
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
@@ -285,5 +312,10 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         mCalender.set(Calendar.MONTH, month);
         mCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         mDueDate = mCalender.getTime();
+    }
+
+    private void showDatePickerDialog(){
+        DatePickerFragment datePicker = new DatePickerFragment();
+        datePicker.show(getSupportFragmentManager(), "datePicker");
     }
 }

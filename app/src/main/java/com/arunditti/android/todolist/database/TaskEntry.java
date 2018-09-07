@@ -165,6 +165,14 @@ public class TaskEntry {
         this.completed = completed;
     }
 
+    public boolean getActive() {
+        return !completed;
+    }
+
+    public void setActive(boolean completed) {
+        this.completed = !completed;
+    }
+
     public Date getUpdatedAt() {
         return updatedAt;
     }

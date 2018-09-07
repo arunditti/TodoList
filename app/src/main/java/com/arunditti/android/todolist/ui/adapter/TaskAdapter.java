@@ -1,11 +1,17 @@
 package com.arunditti.android.todolist.ui.adapter;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
@@ -25,12 +31,17 @@ import com.arunditti.android.todolist.R;
 import com.arunditti.android.todolist.database.AppDatabase;
 import com.arunditti.android.todolist.database.TaskEntry;
 import com.arunditti.android.todolist.ui.activities.AddTaskActivity;
+import com.arunditti.android.todolist.ui.activities.MainActivity;
 import com.arunditti.android.todolist.utils.AppExecutors;
+import com.arunditti.android.todolist.viewModel.AddTaskViewModelFactory;
+import com.arunditti.android.todolist.viewModel.MainViewModel;
 import com.firebase.ui.auth.AuthUI;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 /**
  * Created by arunditti on 8/28/18.
@@ -51,9 +62,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     // Date formatter
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
     private boolean isCompleted;
-    private AppDatabase mDb;
     private static final int DEFAULT_TASK_ID = -1;
     private int mTaskId = DEFAULT_TASK_ID;
+    private AppDatabase mDb;
 
 
     public interface ItemClickListener {
@@ -76,6 +87,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public void onBindViewHolder(@NonNull final TaskAdapter.TaskViewHolder holder, int position) {
 
+        mDb = AppDatabase.getInstance(getApplicationContext());
         //Determine the values of the wanted data
         final TaskEntry taskEntry = mTaskEntries.get(position);
         final String title = taskEntry.getTitle();
@@ -89,6 +101,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         //Set values
         holder.titleView.setText(title);
         holder.descriptionView.setText(description);
+        holder.categoryView.setText(category);
 
         holder.updatedAtView.setText(updatedAt);
         holder.dueDateView.setText(dueDate);
@@ -107,49 +120,25 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         int priorityColor = getPriorityColor(priority);
         priorityCircle.setColor(priorityColor);
 
-        //holder.checkBoxView.setTag(position);
         isCompleted = taskEntry.getCompleted();
-        holder.checkBoxView.setChecked(isCompleted);
- //       holder.bind(position);
+        Log.d(LOG_TAG, "************** iscompleted = " + isCompleted);
+        //holder.checkBoxView.setChecked(isCompleted);
 
-//        holder.checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
+        //holder.checkBoxView.setTag(position);
 //
-////                if(buttonView.isChecked()) {
-////                    isCompleted = TaskEntry.TASK_COMPLETED;
-////                } else {
-////                    isCompleted = TaskEntry.TASK_NOT_COMPLETED;
-////                }
-////                buttonView.setChecked(isCompleted);
-//
-//
-//                Toast.makeText(mContext, "hi this is a toast msg", Toast.LENGTH_SHORT).show();
-//
-//                final TaskEntry task = new TaskEntry(title, description, priority, isCompleted);
-//                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-////                        int position = (int) buttonView.getTag();
-////                        Log.d(LOG_TAG, "position is " + position);
-////                        List<TaskEntry> tasks = getTasks();
-////                        //Log.d(LOG_TAG, "position is " + task);
-////                       //tasks.get(position);
-////                        Log.d(LOG_TAG, "position is********************************* " + tasks);
-////                        mDb.taskDao().updateTask( getTasks().get(position));
-////
-//                        int position = (int) buttonView.getTag();
-//                        task.setId(position);
-//                        //Log.d(LOG_TAG, "position is********************************* " + tasks);
-//                        mDb.taskDao().updateTask(task);
-//
-//                    }
-//                });
-//            }
-//        });
-//        mDb = AppDatabase.getInstance(mContext.getApplicationContext());
+        MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
 
+        position = holder.getAdapterPosition();
+        // Observe the LiveData object in the ViewModel
+        viewModel.getCompletedTasks().observe((LifecycleOwner) mContext, new Observer<List<TaskEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+                Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+                if(isCompleted = taskEntry.getCompleted()) {
+                    holder.checkBoxView.setChecked(isCompleted);
+                }
+            }
+        });
 
     }
 
@@ -189,7 +178,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         //Class variables for the task
         TextView titleView;
         TextView descriptionView;
-        TextView category;
+        TextView categoryView;
         TextView priorityView;
         AppCompatCheckBox checkBoxView;
         TextView updatedAtView;
@@ -200,38 +189,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
             titleView = itemView.findViewById(R.id.tv_taskTitle);
             descriptionView = itemView.findViewById(R.id.tv_taskDescription);
+            categoryView = itemView.findViewById(R.id.tv_category);
             updatedAtView = itemView.findViewById(R.id.tv_taskUpdatedAt);
             dueDateView = itemView.findViewById(R.id.tv_todo_due_date);
             priorityView = itemView.findViewById(R.id.tv_priority);
             checkBoxView = itemView.findViewById(R.id.completed);
             itemView.setOnClickListener(this);
-            checkBoxView.setOnClickListener(this);
+            //checkBoxView.setOnClickListener(this);
         }
-//
-//        void bind(int position) {
-//            // check the state of the model
-//            if (!mTaskEntries.get(position).getCompleted()) {
-//                checkBoxView.setChecked(false);}
-//            else {
-//                checkBoxView.setChecked(true);
-//            }
-//            checkBoxView.setText(String.valueOf(mTaskEntries.get(position).getId()));
-//        }
-
 
         @Override
         public void onClick(View v) {
             int elementId = mTaskEntries.get(getAdapterPosition()).getId();
             mItemClickListener.onItemClickListener(elementId);
-
-//            int adapterPosition = getAdapterPosition();
-//            if (mTaskEntries.get(adapterPosition).getCompleted()) {
-//                checkBoxView.setChecked(false);
-//                mTaskEntries.get(adapterPosition).setCompleted(false);
-//            } else {
-//                checkBoxView.setChecked(true);
-//                mTaskEntries.get(adapterPosition).setCompleted(true);
-//            }
         }
     }
 

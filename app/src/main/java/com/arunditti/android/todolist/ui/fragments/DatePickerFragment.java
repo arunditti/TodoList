@@ -6,6 +6,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.widget.DatePicker;
+
+import com.arunditti.android.todolist.ui.activities.AddTaskActivity;
 
 import java.util.Calendar;
 
@@ -14,13 +17,6 @@ import java.util.Calendar;
  */
 
 public class DatePickerFragment extends DialogFragment {
-    private Context mContext;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-    }
 
     @NonNull
     @Override
@@ -30,6 +26,7 @@ public class DatePickerFragment extends DialogFragment {
         int year = calendar.get(Calendar.YEAR);
         int mon = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        return new DatePickerDialog(mContext, (DatePickerDialog.OnDateSetListener) mContext, year, mon, day);
+        return new DatePickerDialog(getActivity(), (AddTaskActivity)getActivity(), year, mon, day);
     }
+
 }
