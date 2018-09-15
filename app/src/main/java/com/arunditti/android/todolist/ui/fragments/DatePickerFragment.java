@@ -18,6 +18,8 @@ import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment {
 
+    public static final String LOG_TAG = DatePickerDialog.class.getSimpleName();
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class DatePickerFragment extends DialogFragment {
         int year = calendar.get(Calendar.YEAR);
         int mon = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+
         return new DatePickerDialog(getActivity(), (AddTaskActivity)getActivity(), year, mon, day);
     }
 

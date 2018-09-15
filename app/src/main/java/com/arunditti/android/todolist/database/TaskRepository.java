@@ -11,86 +11,114 @@ import java.util.List;
  * Created by arunditti on 9/4/18.
  */
 
-//public class TaskRepository {
-//
-//    private static final Object LOCK = new Object();
-//    private final TaskDao mTaskDao;
-//    private static TaskRepository sInstance;
-//
-//    public TaskRepository(Application application) {
-//        AppDatabase mDb = AppDatabase.getInstance(application.getApplicationContext());
-//        mTaskDao = mDb.taskDao();
-//    }
-//
-//    public synchronized static TaskRepository getsInstance(Application application) {
-//        if(sInstance == null) {
-//            synchronized (LOCK) {
-//                sInstance = new TaskRepository(application);
-//            }
-//        }
-//        return sInstance;
-//    }
-//
-//    public LiveData<List<TaskEntry>> loadAllTaskByPriority() {
-//        return mTaskDao.loadAllTasksByPriority();
-//    }
-//
-//    public LiveData<List<TaskEntry>> loadAllTasksByDueDate() {
-//        return mTaskDao.loadAllTasksByDueDate();
-//    }
-//
-//    public LiveData<List<TaskEntry>> loadAllTasksByCategory() {
-//        return mTaskDao.loadAllTasksByCategory();
-//    }
-//
-//
-//    public LiveData<TaskEntry> loadTaskById(int id) {
-//        return mTaskDao.loadTaskById(id);
-//    }
-//
-//    public void insertTask(TaskEntry taskEntry) {
-//        new insertTaskAsyncTask(mTaskDao).execute(taskEntry);
-//    }
-//
-//    private static class insertTaskAsyncTask extends AsyncTask<TaskEntry, Void, Void> {
-//
-//        private TaskDao mTaskDao;
-//
-//        insertTaskAsyncTask(TaskDao dao) {
-//            this.mTaskDao = dao;
-//        }
-//        @Override
-//        protected Void doInBackground(TaskEntry... taskEntries) {
-//            mTaskDao.insertTask(taskEntries[0]);
-//            return null;
-//        }
-//    }
-//
-//
-//    public void deleteTask(TaskEntry id) {
-//        new DeleteTaskAsyncTask(mTaskDao).execute(id);
-//    }
-//
-//    private static class DeleteTaskAsyncTask extends AsyncTask<TaskEntry, Void, Void> {
-//        private TaskDao taskDao;
-//
-//        public DeleteTaskAsyncTask(TaskDao mTaskDao) {
-//            this.taskDao = mTaskDao;
-//        }
-//
-////        @Override
-////        protected Void doInBackground(TaskEntry... taskEntries) {
-////            taskDao.deleteTask(taskEntries[0]);
-////            return null;
-////        }
-//
-//
-//        @Override
-//        protected Void doInBackground(TaskEntry... ints) {
-//            taskDao.deleteTask(ints[0]);
-//            return null;
-//        }
-//    }
-//
-//
-//}
+public class TaskRepository {
+
+    private static final Object LOCK = new Object();
+    private final TaskDao mTaskDao;
+    private LiveData<List<TaskEntry>> taskEntries;
+    private static TaskRepository sInstance;
+
+    public TaskRepository(Application application) {
+        AppDatabase mDb = AppDatabase.getInstance(application.getApplicationContext());
+        mTaskDao = mDb.taskDao();
+        taskEntries = mTaskDao.loadAllTasksByDueDate();
+    }
+
+    public synchronized static TaskRepository getsInstance(Application application) {
+        if(sInstance == null) {
+            synchronized (LOCK) {
+                sInstance = new TaskRepository(application);
+            }
+        }
+        return sInstance;
+    }
+
+    public LiveData<List<TaskEntry>> loadAllTaskByPriority() {
+        return taskEntries;
+    }
+
+    public LiveData<List<TaskEntry>> loadAllTasksByDueDate() {
+        return mTaskDao.loadAllTasksByDueDate();
+    }
+
+    public LiveData<List<TaskEntry>> loadAllTasksByCategory() {
+        return mTaskDao.loadAllTasksByCategory();
+    }
+
+
+    public LiveData<TaskEntry> loadTaskById(int id) {
+        return mTaskDao.loadTaskById(id);
+    }
+
+    public void insertTask(TaskEntry taskEntry) {
+        new insertTaskAsyncTask(mTaskDao).execute(taskEntry);
+    }
+
+    private static class insertTaskAsyncTask extends AsyncTask<TaskEntry, Void, Void> {
+
+        private TaskDao mTaskDao;
+
+        insertTaskAsyncTask(TaskDao dao) {
+            this.mTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(TaskEntry... taskEntries) {
+            mTaskDao.insertTask(taskEntries[0]);
+            return null;
+        }
+    }
+
+    public void updateTask(TaskEntry taskEntry) {
+        new updateTaskAsyncTask(mTaskDao).execute(taskEntry);
+    }
+
+    private static class updateTaskAsyncTask extends AsyncTask<TaskEntry, Void, Void> {
+
+        private TaskDao mTaskDao;
+
+        updateTaskAsyncTask(TaskDao dao) {
+            this.mTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(TaskEntry... taskEntries) {
+            mTaskDao.insertTask(taskEntries[0]);
+            return null;
+        }
+    }
+
+    public void deleteTask(TaskEntry taskEntry) {
+        new DeleteTaskAsyncTask(mTaskDao).execute(taskEntry);
+    }
+
+    private static class DeleteTaskAsyncTask extends AsyncTask<TaskEntry, Void, Void> {
+        private TaskDao taskDao;
+
+        public DeleteTaskAsyncTask(TaskDao mTaskDao) {
+            this.taskDao = mTaskDao;
+        }
+
+        @Override
+        protected Void doInBackground(TaskEntry... taskEntries) {
+            taskDao.deleteTask(taskEntries[0]);
+            return null;
+        }
+    }
+
+    public void deleteAllTask() {
+        new DeleteTaskAsyncTask(mTaskDao).execute();
+    }
+
+    private static class DeleteAllTaskAsyncTask extends AsyncTask<Void, Void, Void> {
+        private TaskDao taskDao;
+
+        public DeleteAllTaskAsyncTask(TaskDao mTaskDao) {
+            this.taskDao = mTaskDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            taskDao.deleteAllTask();
+            return null;
+        }
+    }
+}

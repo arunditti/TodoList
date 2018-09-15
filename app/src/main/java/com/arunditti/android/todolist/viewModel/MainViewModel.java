@@ -4,7 +4,9 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.util.Log;
+import android.view.MenuItem;
 
+import com.arunditti.android.todolist.R;
 import com.arunditti.android.todolist.database.AppDatabase;
 import com.arunditti.android.todolist.database.TaskEntry;
 
@@ -27,7 +29,8 @@ public class MainViewModel extends AndroidViewModel {
         // In the constructor use the loadAllTasks of the taskDao to initialize the tasks variable
         AppDatabase database = AppDatabase.getInstance(this.getApplication());
         Log.d(LOG_TAG, "Actively retrieving the tasks from the DataBase");
-        tasks = database.taskDao().loadAllTasksByPriority();
+
+        tasks = database.taskDao().loadAllTasksByDueDate();
 
 //        mTaskRepository = TaskRepository.getsInstance(application);
 //        tasks = mTaskRepository.loadAllTaskByPriority();
@@ -39,7 +42,12 @@ public class MainViewModel extends AndroidViewModel {
         return tasks;
     }
 
+    public LiveData<List<TaskEntry>> getTasksByPriority() {
+        return tasks;
+    }
+
     public LiveData<List<TaskEntry>> getCompletedTasks() {
         return tasks;
     }
+
 }

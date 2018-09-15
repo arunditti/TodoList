@@ -31,6 +31,8 @@ dependencies {
     //add Recycler view dependencies; must match SDK version
     implementation 'com.android.support:recyclerview-v7:27.1.0'
 
+    implementation 'com.android.support:preference-v7:27.1.1'
+
     //FAB dependencies
     implementation 'com.android.support:design:27.1.0'
 

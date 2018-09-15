@@ -1,16 +1,20 @@
 package com.arunditti.android.todolist.ui.activities;
 
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
@@ -25,8 +29,8 @@ import com.arunditti.android.todolist.database.TaskEntry;
 import com.arunditti.android.todolist.ui.adapter.TaskAdapter;
 import com.arunditti.android.todolist.utils.AppExecutors;
 import com.arunditti.android.todolist.viewModel.MainViewModel;
+import com.arunditti.android.todolist.widget.TodoListWidgetProvider;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -39,14 +43,14 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    // Constant for logging
-    private static final String TAG = MainActivity.class.getSimpleName();
     // Member variables for the adapter and RecyclerView
     private RecyclerView mRecyclerView;
     private TaskAdapter mAdapter;
 
    // private TaskRepository mTaskRepository;
     private AppDatabase mDb;
+
+    MainViewModel viewModel;
 
     View emptyView;
 
@@ -58,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Initialize Firebase components
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -151,6 +158,14 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         //Call retrieveTAsks
         setupViewModel();
 
+        Intent widgetIntent = new Intent(MainActivity.this, TodoListWidgetProvider.class);
+        widgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        getApplicationContext().sendBroadcast(widgetIntent);
+
+        Toast.makeText(this, "Widget is added", Toast.LENGTH_SHORT).show();
+
+        //updateWidget();
+
     }
 
     @Override
@@ -160,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             if (resultCode == RESULT_OK) {
                 // Sign-in succeeded, set up the UI
                 Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
                 Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
@@ -192,6 +208,29 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+                startActivity(startSettingsActivity);
+                return true;
+
+            case R.id.task_all:
+                //viewModel.setFiltering(TasksFilterType.TASK_BY_DUE_DATE);
+
+                return true;
+
+            case R.id.task_by_due_date:
+               // viewModel.setFiltering(TasksFilterType.TASK_BY_DUE_DATE);
+                return true;
+
+            case R.id.task_by_priority:
+                //viewModel.setFiltering(TasksFilterType.TASK_BY_PRIORITY);
+                Toast.makeText(this, "Task_by_priority", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.task_completed:
+                //viewModel.setFiltering(TasksFilterType.TASK_COMPLETED);
+                return true;
+
             case R.id.sign_out_menu:
                 //Sign out
                 AuthUI.getInstance().signOut(this);
@@ -199,15 +238,16 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             default:
                 return super.onOptionsItemSelected(item);
         }
+
     }
 
     private void setupViewModel() {
-        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         // Observe the LiveData object in the ViewModel
         viewModel.getTasks().observe(this, new Observer<List<TaskEntry>>() {
             @Override
             public void onChanged(@Nullable List<TaskEntry> taskEntries) {
-                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
                 mAdapter.setTasks(taskEntries);
                 setEmptyView(taskEntries);
             }
@@ -231,5 +271,23 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         intent.putExtra(AddTaskActivity.EXTRA_TASK_ID, itemId);
         startActivity(intent);
     }
-
+//
+//    private String setupTaskSharedPreferences() {
+//        String sortBy;
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+//
+//        String keyForTask = getString(R.string.pref_sort_by_key);
+//        String defaultTask = getString(R.string.pref_sort_by_default_value);
+//        sortBy = sharedPreferences.getString(keyForTask, defaultTask);
+//
+//        if (sortBy.equals(getString(R.string.pref_sort_by_priority_value))) {
+//            sortBy.equals(mDb.taskDao().loadAllTasksByPriority());
+//            setupViewModel();
+//
+//        } else {
+//
+//        }
+//        return sortBy;
+//
+//    }
 }

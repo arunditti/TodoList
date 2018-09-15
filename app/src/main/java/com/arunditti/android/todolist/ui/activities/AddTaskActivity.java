@@ -5,9 +5,11 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -50,9 +52,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     public static final int PRIORITY_LOW = 3;
     // Constant for default task id to be used when not in update mode
     private static final int DEFAULT_TASK_ID = -1;
-    // Constant for date format
-    private static final String DATE_FORMAT = "dd/MM/yyy";
 
+    // Constant for date format
+    private static final String DATE_FORMAT = "MM/dd/yyy";
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 
     // Fields for views
@@ -69,6 +71,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     Button mDateDialog;
     private DatePickerDialog mDatePickerDialog;
     private Date mDueDate;
+    private Date mReminderDate;
 
     private TextView mTextViewDueDate;
     private int mTaskId = DEFAULT_TASK_ID;
@@ -92,6 +95,10 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activity_add_task);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         spinner = findViewById(R.id.spinner);
 
@@ -312,6 +319,9 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         mCalender.set(Calendar.MONTH, month);
         mCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         mDueDate = mCalender.getTime();
+
+//Date one dat before due date
+        //mCalender.add(Calendar.DAY_OF_YEAR, -3);
     }
 
     private void showDatePickerDialog(){

@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string-array name="pref_sort_options">
+        <item>@string/pref_sort_by_label_priority</item>
+        <item>@string/pref_sort_by_label_due_date</item>
+        <item>@string/pref_sort_by_label_completed</item>
+    </string-array>
+
+    <string-array name="pref_sort_value">
+        <item>@string/pref_sort_by_priority_value</item>
+        <item>@string/pref_sort_by_due_date_value</item>
+        <item>@string/pref_sort_by_completed_value</item>
+    </string-array>
+</resources>

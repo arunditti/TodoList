@@ -2,9 +2,18 @@
 
     <string name="main_activity_name">All Tasks</string>
     <string name="add_task_activity_name">Add a New Task</string>
+    <string name="settings">Settings</string>
 
     <string name="app_name">Todo List</string>
+
+    <!-- Strings related to settings -->
+    <string name="label_action_settings">Settings</string>
     <string name="sign_out">Sign Out</string>
+    <string name="all_task">All Tasks</string>
+    <string name="task_by_priority">Tasks by Priority</string>
+    <string name="task_by_due_date">Tasks by Due Date</string>
+    <string name="task_completed">Tasks completed</string>
+
 
     <!-- Strings for MainActivity -->
     <string name="priority_1">1</string>
@@ -32,5 +41,19 @@
 
     <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Get started by adding a new Task</string>
+
+
+    <!-- Pref related settings -->
+    <string name="pref_sort_by_label">Sort By</string>
+    <string name="pref_sort_by_label_priority">Priority</string>
+    <string name="pref_sort_by_label_due_date">Due Date</string>
+    <string name="pref_sort_by_label_completed">Completed</string>
+    <string name="pref_sort_by_key" translatable="false">sort</string>
+    <string name="pref_sort_by_default_value" translatable="false">due_date</string>
+    <string name="pref_sort_by_due_date_value" translatable="false">due_date</string>
+    <string name="pref_sort_by_priority_value" translatable="false">priority</string>
+    <string name="pref_sort_by_completed_value" translatable="false">completed</string>
+    <string name="add_widget">Add widget</string>
+
 
 </resources>

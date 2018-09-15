@@ -29,6 +29,9 @@ public interface TaskDao {
     @Query("SELECT * FROM task WHERE id = :id")
     LiveData<TaskEntry> loadTaskById(int id);
 
+    @Query("SELECT * FROM task ORDER BY dueDate")
+    List<TaskEntry> loadAllTasksForWidget();
+
 
     @Query("UPDATE task SET completed = :completed WHERE id = :id")
     void updateCompleted(String id, boolean completed);
@@ -47,5 +50,8 @@ public interface TaskDao {
 
     @Delete
     void deleteTask(TaskEntry taskEntry);
+
+    @Query("DELETE FROM task")
+    void deleteAllTask();
 
 }

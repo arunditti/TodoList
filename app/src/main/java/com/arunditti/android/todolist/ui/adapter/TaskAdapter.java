@@ -52,7 +52,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     private static final String LOG_TAG = AddTaskActivity.class.getSimpleName();
 
     // Constant for date format
-    private static final String DATE_FORMAT = "dd/MM/yyy";
+    private static final String DATE_FORMAT = "MM/dd/yyy";
 
     // Member variable to handle item clicks
     final private ItemClickListener mItemClickListener;
