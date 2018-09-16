@@ -122,23 +122,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         isCompleted = taskEntry.getCompleted();
         Log.d(LOG_TAG, "************** iscompleted = " + isCompleted);
-        //holder.checkBoxView.setChecked(isCompleted);
+        holder.checkBoxView.setChecked(isCompleted);
 
         //holder.checkBoxView.setTag(position);
 //
-        MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
-
-        position = holder.getAdapterPosition();
-        // Observe the LiveData object in the ViewModel
-        viewModel.getCompletedTasks().observe((LifecycleOwner) mContext, new Observer<List<TaskEntry>>() {
-            @Override
-            public void onChanged(@Nullable List<TaskEntry> taskEntries) {
-                Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
-                if(isCompleted = taskEntry.getCompleted()) {
-                    holder.checkBoxView.setChecked(isCompleted);
-                }
-            }
-        });
+//        MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
+//
+//        position = holder.getAdapterPosition();
+//        // Observe the LiveData object in the ViewModel
+//        viewModel.getCompletedTasks().observe((LifecycleOwner) mContext, new Observer<List<TaskEntry>>() {
+//            @Override
+//            public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+//                Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+//                if(isCompleted = taskEntry.getCompleted()) {
+//                    holder.checkBoxView.setChecked(isCompleted);
+//                }
+//            }
+//        });
 
     }
 

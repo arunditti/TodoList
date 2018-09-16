@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel;
 
 import com.arunditti.android.todolist.database.AppDatabase;
 import com.arunditti.android.todolist.database.TaskEntry;
+import com.arunditti.android.todolist.database.TaskRepository;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 
 public class AddTaskViewModel extends ViewModel {
-   // private TaskRepository mTaskRepository;
+    private TaskRepository mTaskRepository;
 
     // Add a task member variable for the TaskEntry object wrapped in a LiveData
     private LiveData<TaskEntry> task;
@@ -29,8 +30,12 @@ public class AddTaskViewModel extends ViewModel {
         return task;
     }
 
+    public LiveData<List<TaskEntry>> loadTaskByPriority() {
+        return mTaskRepository.loadAllTaskByPriority();
+    }
+
     public void insertTask(TaskEntry taskEntry) {
-       // mTaskRepository.insertTask(taskEntry);
+        mTaskRepository.insertTask(taskEntry);
     }
 
 }

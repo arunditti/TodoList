@@ -23,8 +23,8 @@ public interface TaskDao {
     @Query("SELECT * FROM task ORDER BY dueDate")
     LiveData<List<TaskEntry>> loadAllTasksByDueDate();
 
-    @Query("SELECT * FROM task ORDER BY category")
-    LiveData<List<TaskEntry>> loadAllTasksByCategory();
+    @Query("SELECT * FROM task WHERE category = :category")
+    LiveData<List<TaskEntry>> loadTasksByCategory(String category);
 
     @Query("SELECT * FROM task WHERE id = :id")
     LiveData<TaskEntry> loadTaskById(int id);

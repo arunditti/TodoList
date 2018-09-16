@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import com.arunditti.android.todolist.R;
 import com.arunditti.android.todolist.database.AppDatabase;
 import com.arunditti.android.todolist.database.TaskEntry;
+import com.arunditti.android.todolist.database.TaskRepository;
 
 import java.util.List;
 
@@ -20,34 +21,22 @@ public class MainViewModel extends AndroidViewModel {
 
     private static final String LOG_TAG = MainViewModel.class.getSimpleName();
 
-    //private TaskRepository mTaskRepository;
-    // Add a tasks member variable for a list of TaskEntry objects wrapped in a LiveData
-    private LiveData<List<TaskEntry>> tasks;
+    private TaskRepository mTaskRepository;
 
     public MainViewModel(Application application) {
         super(application);
-        // In the constructor use the loadAllTasks of the taskDao to initialize the tasks variable
-        AppDatabase database = AppDatabase.getInstance(this.getApplication());
-        Log.d(LOG_TAG, "Actively retrieving the tasks from the DataBase");
 
-        tasks = database.taskDao().loadAllTasksByDueDate();
-
-//        mTaskRepository = TaskRepository.getsInstance(application);
-//        tasks = mTaskRepository.loadAllTaskByPriority();
+        mTaskRepository = TaskRepository.getsInstance(application);
 
     }
 
     // Create a getter for the tasks variable
-    public LiveData<List<TaskEntry>> getTasks() {
-        return tasks;
+    public LiveData<List<TaskEntry>> getTaskByDueDate() {
+        return mTaskRepository.loadAllTasksByDueDate();
     }
 
     public LiveData<List<TaskEntry>> getTasksByPriority() {
-        return tasks;
-    }
-
-    public LiveData<List<TaskEntry>> getCompletedTasks() {
-        return tasks;
+        return mTaskRepository.loadAllTaskByPriority();
     }
 
 }

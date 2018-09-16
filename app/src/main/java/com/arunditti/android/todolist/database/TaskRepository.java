@@ -34,15 +34,15 @@ public class TaskRepository {
     }
 
     public LiveData<List<TaskEntry>> loadAllTaskByPriority() {
-        return taskEntries;
+        return mTaskDao.loadAllTasksByPriority();
     }
 
     public LiveData<List<TaskEntry>> loadAllTasksByDueDate() {
         return mTaskDao.loadAllTasksByDueDate();
     }
 
-    public LiveData<List<TaskEntry>> loadAllTasksByCategory() {
-        return mTaskDao.loadAllTasksByCategory();
+    public LiveData<List<TaskEntry>> loadTasksByCategory(String category) {
+        return mTaskDao.loadTasksByCategory(category);
     }
 
 

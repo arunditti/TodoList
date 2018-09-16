@@ -5,6 +5,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 import com.arunditti.android.todolist.R;
 import com.arunditti.android.todolist.database.AppDatabase;
 import com.arunditti.android.todolist.database.TaskEntry;
+import com.arunditti.android.todolist.database.TaskRepository;
 import com.arunditti.android.todolist.ui.adapter.TaskAdapter;
 import com.arunditti.android.todolist.utils.AppExecutors;
 import com.arunditti.android.todolist.viewModel.MainViewModel;
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private static final String RECYCLER_VIEW_STATE = "recycler_view_state";
+
     // Member variables for the adapter and RecyclerView
     private RecyclerView mRecyclerView;
     private TaskAdapter mAdapter;
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     private AppDatabase mDb;
 
     MainViewModel viewModel;
+    private TaskRepository mTaskRepository;
 
     View emptyView;
 
@@ -211,40 +217,57 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             case R.id.action_settings:
                 Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
                 startActivity(startSettingsActivity);
-                return true;
+                break;
 
             case R.id.task_all:
                 //viewModel.setFiltering(TasksFilterType.TASK_BY_DUE_DATE);
-
-                return true;
+                break;
 
             case R.id.task_by_due_date:
-               // viewModel.setFiltering(TasksFilterType.TASK_BY_DUE_DATE);
-                return true;
+                viewModel.getTaskByDueDate().observe(this, new Observer<List<TaskEntry>>() {
+                    @Override
+                    public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+                        Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+                        mAdapter.setTasks(taskEntries);
+                        setEmptyView(taskEntries);
+                    }
+                });
+                break;
 
             case R.id.task_by_priority:
-                //viewModel.setFiltering(TasksFilterType.TASK_BY_PRIORITY);
                 Toast.makeText(this, "Task_by_priority", Toast.LENGTH_SHORT).show();
-                return true;
+                viewModel.getTasksByPriority().observe(this, new Observer<List<TaskEntry>>() {
+                    @Override
+                    public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+                        Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+                        mAdapter.setTasks(taskEntries);
+                        setEmptyView(taskEntries);
+                    }
+                });
+                break;
 
             case R.id.task_completed:
                 //viewModel.setFiltering(TasksFilterType.TASK_COMPLETED);
-                return true;
+
+                break;
 
             case R.id.sign_out_menu:
                 //Sign out
                 AuthUI.getInstance().signOut(this);
-                return true;
+                break;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return true;
 
     }
 
     private void setupViewModel() {
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         // Observe the LiveData object in the ViewModel
-        viewModel.getTasks().observe(this, new Observer<List<TaskEntry>>() {
+
+        viewModel.getTaskByDueDate().observe(this, new Observer<List<TaskEntry>>() {
             @Override
             public void onChanged(@Nullable List<TaskEntry> taskEntries) {
                 Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
@@ -271,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         intent.putExtra(AddTaskActivity.EXTRA_TASK_ID, itemId);
         startActivity(intent);
     }
-//
+
 //    private String setupTaskSharedPreferences() {
 //        String sortBy;
 //        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -290,4 +313,5 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 //        return sortBy;
 //
 //    }
+
 }

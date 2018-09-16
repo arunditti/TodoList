@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.arunditti.android.todolist.database.AppDatabase;
+import com.arunditti.android.todolist.database.TaskRepository;
 
 /**
  * Created by arunditti on 8/29/18.
@@ -14,6 +15,7 @@ public class AddTaskViewModelFactory extends ViewModelProvider.NewInstanceFactor
     //Add two member variables. One for the database and one for the taskId
     private final AppDatabase mDb;
     private final int mTaskId;
+//    private final TaskRepository mTaskRepository;
 
 
     // Initialize the member variables in the constructor with the parameters received
