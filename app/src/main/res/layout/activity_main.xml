@@ -25,6 +25,13 @@
             app:titleTextColor="@color/white"
             app:layout_scrollFlags="scroll|enterAlways">
 
+            <Spinner
+                android:id="@+id/spinner_main_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:overlapAnchor="false"/>
+
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 

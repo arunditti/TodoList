@@ -1,11 +1,14 @@
 package com.arunditti.android.todolist.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +26,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.arunditti.android.todolist.R;
@@ -37,12 +43,15 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindView;
+
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
-public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemClickListener {
+public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemClickListener, AdapterView.OnItemSelectedListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -59,10 +68,14 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     private TaskRepository mTaskRepository;
 
     View emptyView;
+    private int mTaskIndex;
 
     public static final int RC_SIGN_IN = 1;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+//    @BindView(R.id.spinner_main_activity)
+    private Spinner mSpinnerMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +109,11 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             }
         };
 
+        mSpinnerMain = findViewById(R.id.spinner_main_activity);
+        // Initialize member variable for the data base
+        mDb = AppDatabase.getInstance(getApplicationContext());
+        setupSpinner();
+        mSpinnerMain.setSelection(0);
 
         // Set the RecyclerView to its corresponding view
         mRecyclerView = findViewById(R.id.rv_tasks_list);
@@ -104,8 +122,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         // Set the layout for the RecyclerView to be a linear layout, which measures and
         // positions items within a RecyclerView into a linear list
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
 
         // Initialize the adapter and attach it to the RecyclerView
         mAdapter = new TaskAdapter(this, this);
@@ -170,8 +186,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
         Toast.makeText(this, "Widget is added", Toast.LENGTH_SHORT).show();
 
-        //updateWidget();
-
     }
 
     @Override
@@ -179,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
+
                 // Sign-in succeeded, set up the UI
                 Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
 
@@ -190,6 +205,27 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         }
     }
 
+    private void setupSpinner() {
+
+                String[] categories = {
+                        "All",
+                "Groceries",
+                "Shopping",
+                "School",
+                "Assignments"
+        };
+
+        ArrayList<String> spinnerList = new ArrayList<>(Arrays.asList(categories));
+
+        // Category spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerMain.setAdapter(adapter);
+
+        //Spinner click listener
+        mSpinnerMain.setSelection(mTaskIndex, true);
+        mSpinnerMain.setOnItemSelectedListener(this);
+    }
 
     @Override
     protected void onResume() {
@@ -217,10 +253,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             case R.id.action_settings:
                 Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
                 startActivity(startSettingsActivity);
-                break;
-
-            case R.id.task_all:
-                //viewModel.setFiltering(TasksFilterType.TASK_BY_DUE_DATE);
                 break;
 
             case R.id.task_by_due_date:
@@ -295,23 +327,39 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         startActivity(intent);
     }
 
-//    private String setupTaskSharedPreferences() {
-//        String sortBy;
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//
-//        String keyForTask = getString(R.string.pref_sort_by_key);
-//        String defaultTask = getString(R.string.pref_sort_by_default_value);
-//        sortBy = sharedPreferences.getString(keyForTask, defaultTask);
-//
-//        if (sortBy.equals(getString(R.string.pref_sort_by_priority_value))) {
-//            sortBy.equals(mDb.taskDao().loadAllTasksByPriority());
-//            setupViewModel();
-//
-//        } else {
-//
-//        }
-//        return sortBy;
-//
-//    }
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(position == 0) {
+                viewModel.getTaskByDueDate().observe(this, new Observer<List<TaskEntry>>() {
+                    @Override
+                    public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+                        Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+                        mAdapter.setTasks(taskEntries);
+                        setEmptyView(taskEntries);
+                    }
+                });
+        } else {
+            String string = parent.getItemAtPosition(position).toString();
+              // mTaskRepository.loadTasksByCategory(string);
 
+            //loadTaskWithCategory(string);
+
+            viewModel.getTaskByCategory(string).observe(this, new Observer<List<TaskEntry>>() {
+                @Override
+                public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+                    Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+                    mAdapter.setTasks(taskEntries);
+                    setEmptyView(taskEntries);
+                }
+            });
+        }
+// Showing selected spinner item
+        mTaskIndex = position;
+        Toast.makeText(parent.getContext(), "Selected: " + mTaskIndex, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

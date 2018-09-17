@@ -33,9 +33,9 @@ public class AddTaskViewModel extends ViewModel {
     public LiveData<List<TaskEntry>> loadTaskByPriority() {
         return mTaskRepository.loadAllTaskByPriority();
     }
-
-    public void insertTask(TaskEntry taskEntry) {
-        mTaskRepository.insertTask(taskEntry);
-    }
+//
+//    public void insertTask(TaskEntry taskEntry) {
+//        mTaskRepository.insertTask(taskEntry);
+//    }
 
 }

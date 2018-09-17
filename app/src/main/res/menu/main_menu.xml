@@ -12,9 +12,6 @@
         android:title="@string/task_by_due_date" />
 
     <item
-        android:id="@+id/task_all"
-        android:title="@string/all_task" />
-    <item
         android:id="@+id/task_by_priority"
         android:title="@string/task_by_priority" />
 

@@ -39,4 +39,12 @@ public class MainViewModel extends AndroidViewModel {
         return mTaskRepository.loadAllTaskByPriority();
     }
 
+//    public void getTaskByCategory(String string) {
+//         mTaskRepository.loadTasksByCategory(string);
+//    }
+
+    public LiveData<List<TaskEntry>> getTaskByCategory(String category) {
+         return mTaskRepository.loadTaskByCategory(category);
+    }
+
 }
