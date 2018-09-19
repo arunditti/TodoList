@@ -35,6 +35,10 @@ public interface TaskDao {
     @Query("SELECT * FROM task ORDER BY dueDate")
     List<TaskEntry> loadAllTasksForWidget();
 
+    @Query("SELECT EXISTS(SELECT * FROM task WHERE completed = :completed)")
+    LiveData<Integer> isTaskCompleted(boolean completed);
+
+
 
     @Query("UPDATE task SET completed = :completed WHERE id = :id")
     void updateCompleted(String id, boolean completed);

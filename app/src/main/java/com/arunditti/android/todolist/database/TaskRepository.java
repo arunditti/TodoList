@@ -51,6 +51,10 @@ public class TaskRepository {
         return mTaskDao.loadTaskById(id);
     }
 
+    public LiveData<Integer> isTaskCompleted(boolean taskCompleted) {
+        return mTaskDao.isTaskCompleted(taskCompleted);
+    }
+
 //    public void loadTasksByCategory(String  category) {
 //        new loadTasksByCategoryAsyncTask(mTaskDao).execute(category);
 //    }

@@ -2,7 +2,9 @@ package com.arunditti.android.todolist.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentValues;
 import android.content.Context;
@@ -122,12 +124,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         isCompleted = taskEntry.getCompleted();
         Log.d(LOG_TAG, "************** iscompleted = " + isCompleted);
-        holder.checkBoxView.setChecked(isCompleted);
+//        holder.checkBoxView.setChecked(isCompleted);
 
-        //holder.checkBoxView.setTag(position);
-//
-//        MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
-//
+        MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
+
 //        position = holder.getAdapterPosition();
 //        // Observe the LiveData object in the ViewModel
 //        viewModel.getCompletedTasks().observe((LifecycleOwner) mContext, new Observer<List<TaskEntry>>() {
@@ -139,6 +139,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 //                }
 //            }
 //        });
+
+
+       // MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
+
+        position = holder.getAdapterPosition();
+
+         //Observe the LiveData object in the ViewModel
+        viewModel.isTaskCompleted(isCompleted).observe((LifecycleOwner) mContext, isChecked -> {
+            if(holder.checkBoxView.isChecked()) {
+                holder.checkBoxView.setChecked(true);
+            } else {
+               holder.checkBoxView.setChecked(false);
+            }
+        });
 
     }
 

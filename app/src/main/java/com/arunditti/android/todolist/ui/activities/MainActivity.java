@@ -51,9 +51,12 @@ import butterknife.BindView;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
-public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemClickListener, AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemClickListener, AdapterView.OnItemSelectedListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
 
     private static final String RECYCLER_VIEW_STATE = "recycler_view_state";
 
@@ -178,14 +181,15 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
         mDb = AppDatabase.getInstance(getApplicationContext());
         //Call retrieveTAsks
-        setupViewModel();
+        setupViewModelByDate();
+
 
         Intent widgetIntent = new Intent(MainActivity.this, TodoListWidgetProvider.class);
         widgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         getApplicationContext().sendBroadcast(widgetIntent);
 
         Toast.makeText(this, "Widget is added", Toast.LENGTH_SHORT).show();
-
+        setupTaskSharedPreferences();
     }
 
     @Override
@@ -228,6 +232,23 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (PREFERENCES_HAVE_BEEN_UPDATED) {
+            Log.d(LOG_TAG, "onStart: Preferences were updated");
+            PREFERENCES_HAVE_BEEN_UPDATED = false;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+
+    @Override
     protected void onResume() {
         super.onResume();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
@@ -256,26 +277,11 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
                 break;
 
             case R.id.task_by_due_date:
-                viewModel.getTaskByDueDate().observe(this, new Observer<List<TaskEntry>>() {
-                    @Override
-                    public void onChanged(@Nullable List<TaskEntry> taskEntries) {
-                        Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
-                        mAdapter.setTasks(taskEntries);
-                        setEmptyView(taskEntries);
-                    }
-                });
+                setupViewModelByDate();
                 break;
 
             case R.id.task_by_priority:
-                Toast.makeText(this, "Task_by_priority", Toast.LENGTH_SHORT).show();
-                viewModel.getTasksByPriority().observe(this, new Observer<List<TaskEntry>>() {
-                    @Override
-                    public void onChanged(@Nullable List<TaskEntry> taskEntries) {
-                        Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
-                        mAdapter.setTasks(taskEntries);
-                        setEmptyView(taskEntries);
-                    }
-                });
+                setupViewModelByPriority();
                 break;
 
             case R.id.task_completed:
@@ -295,11 +301,25 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
     }
 
-    private void setupViewModel() {
+    private void setupViewModelByDate() {
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         // Observe the LiveData object in the ViewModel
 
         viewModel.getTaskByDueDate().observe(this, new Observer<List<TaskEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+                Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+                mAdapter.setTasks(taskEntries);
+                setEmptyView(taskEntries);
+            }
+        });
+    }
+
+    private void setupViewModelByPriority() {
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        // Observe the LiveData object in the ViewModel
+
+        viewModel.getTasksByPriority().observe(this, new Observer<List<TaskEntry>>() {
             @Override
             public void onChanged(@Nullable List<TaskEntry> taskEntries) {
                 Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
@@ -340,9 +360,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
                 });
         } else {
             String string = parent.getItemAtPosition(position).toString();
-              // mTaskRepository.loadTasksByCategory(string);
-
-            //loadTaskWithCategory(string);
 
             viewModel.getTaskByCategory(string).observe(this, new Observer<List<TaskEntry>>() {
                 @Override
@@ -361,5 +378,29 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void setupTaskSharedPreferences() {
+        String sortBy;
+        SharedPreferences sharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(this);
+
+        String keyForTask = getString(R.string.pref_sort_by_key);
+        String defaultTask = getString(R.string.pref_sort_by_default_value);
+        sortBy = sharedPreferences.getString(keyForTask, defaultTask);
+
+        if (sortBy.equals(getString(R.string.pref_sort_by_due_date_value))) {
+            setupViewModelByDate();
+        } else if (sortBy.equals(getString(R.string.pref_sort_by_priority_value))) {
+            setupViewModelByPriority();
+
+        }
+
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.d(LOG_TAG, "Preferences are updated");
+        PREFERENCES_HAVE_BEEN_UPDATED = true;
+        setupTaskSharedPreferences();
     }
 }
