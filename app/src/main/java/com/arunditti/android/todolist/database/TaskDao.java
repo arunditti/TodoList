@@ -23,8 +23,12 @@ public interface TaskDao {
     @Query("SELECT * FROM task ORDER BY dueDate")
     LiveData<List<TaskEntry>> loadAllTasksByDueDate();
 
+//    @Query("SELECT * FROM task WHERE category = :category")
+//    LiveData<List<TaskEntry>> loadTaskByCategory(String category);
+
     @Query("SELECT * FROM task WHERE category = :category")
     LiveData<List<TaskEntry>> loadTaskByCategory(String category);
+
 
 //    @Query("SELECT * FROM task WHERE category = :category")
 //    List<TaskEntry> loadTasksByCategory(String category);
@@ -37,7 +41,6 @@ public interface TaskDao {
 
     @Query("SELECT EXISTS(SELECT * FROM task WHERE completed = :completed)")
     LiveData<Integer> isTaskCompleted(boolean completed);
-
 
 
     @Query("UPDATE task SET completed = :completed WHERE id = :id")

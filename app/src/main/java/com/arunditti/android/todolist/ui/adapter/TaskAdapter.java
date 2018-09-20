@@ -70,7 +70,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
 
     public interface ItemClickListener {
-        void onItemClickListener(int itemId);
+        void onItemClickListener(int taskId);
     }
 
     //Constructor for the TaskAdapter that initializes the context
@@ -124,9 +124,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         isCompleted = taskEntry.getCompleted();
         Log.d(LOG_TAG, "************** iscompleted = " + isCompleted);
-//        holder.checkBoxView.setChecked(isCompleted);
+        holder.checkBoxView.setChecked(isCompleted);
 
-        MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
+//        MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
 
 //        position = holder.getAdapterPosition();
 //        // Observe the LiveData object in the ViewModel
@@ -140,19 +140,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 //            }
 //        });
 
-
-       // MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
-
-        position = holder.getAdapterPosition();
-
-         //Observe the LiveData object in the ViewModel
-        viewModel.isTaskCompleted(isCompleted).observe((LifecycleOwner) mContext, isChecked -> {
-            if(holder.checkBoxView.isChecked()) {
-                holder.checkBoxView.setChecked(true);
-            } else {
-               holder.checkBoxView.setChecked(false);
-            }
-        });
+//
+//         MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
+//
+//        position = holder.getAdapterPosition();
+//
+//        //Observe the LiveData object in the ViewModel
+//        viewModel.isTaskCompleted(isCompleted).observe((LifecycleOwner) mContext, isChecked -> {
+//            if(holder.checkBoxView.isChecked()) {
+//                holder.checkBoxView.setChecked(true);
+//            } else {
+//                holder.checkBoxView.setChecked(false);
+//            }
+//        });
 
     }
 

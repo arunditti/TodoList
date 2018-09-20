@@ -159,12 +159,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         mTextViewDueDate = findViewById(R.id.tv_due_date);
 
         mCalender = Calendar.getInstance();
-//
-//        mDatePickerDialog = new DatePickerDialog(this, AddTaskActivity.this,
-//                mCalender.get(Calendar.YEAR),
-//                mCalender.get(Calendar.MONTH),
-//                mCalender.get(Calendar.DAY_OF_MONTH));
-
 
         mDateDialog = findViewById(R.id.button_date);
         mDateDialog.setOnClickListener(new View.OnClickListener() {
