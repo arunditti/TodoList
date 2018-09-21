@@ -253,19 +253,6 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
                 startActivity(startSettingsActivity);
                 break;
 
-            case R.id.task_by_due_date:
-                setupViewModelByDate();
-                break;
-
-            case R.id.task_by_priority:
-                setupViewModelByPriority();
-                break;
-
-            case R.id.task_completed:
-
-
-                break;
-
             case R.id.sign_out_menu:
                 //Sign out
                 AuthUI.getInstance().signOut(getActivity());

@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,6 +34,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -53,23 +57,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private static final String DATE_FORMAT = "MM/dd/yyy";
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 
-    // Fields for views
-    EditText mEditTextTitle;
-    EditText mEditTextDescription;
-    Spinner mSpinnerCategory;
-    RadioGroup mRadioGroup;
-    Button mButton;
-    AppCompatCheckBox mCheckbox;
     private boolean isCompleted;
 
     private Date mDate;
     private Calendar mCalender;
-    Button mDateDialog;
-    private DatePickerDialog mDatePickerDialog;
     private Date mDueDate;
-    private Date mReminderDate;
-
-    private TextView mTextViewDueDate;
     private int mTaskId = DEFAULT_TASK_ID;
 
     Spinner spinner;
@@ -86,13 +78,27 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     // Member variable for the Database
     private AppDatabase mDb;
 
+    @BindView(R.id.toolbar_activity_add_task) Toolbar toolbar;
+    @BindView(R.id.editTextTaskTitle) EditText mEditTextTitle;
+    @BindView(R.id.editTextTaskDescription) EditText mEditTextDescription;
+    @BindView(R.id.spinner) Spinner mSpinnerCategory;
+    @BindView(R.id.radioGroup) RadioGroup mRadioGroup;
+    @BindView(R.id.completed) AppCompatCheckBox mCheckbox;
+    @BindView(R.id.tv_due_date) TextView mTextViewDueDate;
+    @BindView(R.id.button_date) Button mDateDialog;
+    @BindView(R.id.button_save) Button mButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activity_add_task);
+        ButterKnife.bind(this);
+
+
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activity_add_task);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -151,16 +157,17 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
      * initViews is called from onCreate to init the member variable views
      */
     private void initViews() {
-        mEditTextTitle = findViewById(R.id.editTextTaskTitle);
-        mEditTextDescription = findViewById(R.id.editTextTaskDescription);
+
+        //mEditTextTitle = findViewById(R.id.editTextTaskTitle);
+       // mEditTextDescription = findViewById(R.id.editTextTaskDescription);
         mSpinnerCategory = findViewById(R.id.spinner);
-        mRadioGroup = findViewById(R.id.radioGroup);
-        mCheckbox = findViewById(R.id.completed);
+        //mRadioGroup = findViewById(R.id.radioGroup);
+        //mCheckbox = findViewById(R.id.completed);
         mTextViewDueDate = findViewById(R.id.tv_due_date);
 
         mCalender = Calendar.getInstance();
 
-        mDateDialog = findViewById(R.id.button_date);
+        //mDateDialog = findViewById(R.id.button_date);
         mDateDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,7 +176,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             }
         });
 
-        mButton = findViewById(R.id.button_save);
+        //mButton = findViewById(R.id.button_save);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
