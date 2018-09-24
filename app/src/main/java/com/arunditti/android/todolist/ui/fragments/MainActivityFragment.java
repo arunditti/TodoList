@@ -36,6 +36,7 @@ import com.arunditti.android.todolist.R;
 import com.arunditti.android.todolist.database.AppDatabase;
 import com.arunditti.android.todolist.database.TaskEntry;
 import com.arunditti.android.todolist.database.TaskRepository;
+import com.arunditti.android.todolist.sync.ReminderUtilities;
 import com.arunditti.android.todolist.ui.activities.AddTaskActivity;
 import com.arunditti.android.todolist.ui.activities.MainActivity;
 import com.arunditti.android.todolist.ui.activities.SettingsActivity;
@@ -73,7 +74,6 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     private AppDatabase mDb;
     MainViewModel viewModel;
     private TaskRepository mTaskRepository;
-    //View emptyView;
     private int mTaskIndex;
     //Interface that triggers a callback in the host activity
     onTaskClickListener mCallBack;
@@ -239,6 +239,9 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
                 .registerOnSharedPreferenceChangeListener(this);
         setupTaskSharedPreferences();
 
+        //Schedule the reminder job
+        ReminderUtilities.scheduleReminder(getActivity());
+
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
@@ -252,6 +255,21 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
                 Intent startSettingsActivity = new Intent(getActivity(), SettingsActivity.class);
                 startActivity(startSettingsActivity);
                 break;
+
+            case R.id.completed_task:
+                setupViewModelByTaskCompleted();
+                break;
+
+            case R.id.delete_all_task:
+                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        // get the position from the viewHolder parameter
+                        List<TaskEntry> tasks = mAdapter.getTasks();
+                        // Call deleteTask in the taskDao with the task at that position
+                        mDb.taskDao().deleteAllTask();
+                    }
+                });
 
             case R.id.sign_out_menu:
                 //Sign out
@@ -285,6 +303,20 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
         // Observe the LiveData object in the ViewModel
 
         viewModel.getTasksByPriority().observe(this, new Observer<List<TaskEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+                Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+                mAdapter.setTasks(taskEntries);
+                setEmptyView(taskEntries);
+            }
+        });
+    }
+
+    private void setupViewModelByTaskCompleted() {
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        // Observe the LiveData object in the ViewModel
+
+        viewModel.getTaskCompleted().observe(this, new Observer<List<TaskEntry>>() {
             @Override
             public void onChanged(@Nullable List<TaskEntry> taskEntries) {
                 Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");

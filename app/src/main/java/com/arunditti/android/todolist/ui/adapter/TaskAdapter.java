@@ -89,7 +89,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public void onBindViewHolder(@NonNull final TaskAdapter.TaskViewHolder holder, int position) {
 
-        mDb = AppDatabase.getInstance(getApplicationContext());
+       // mDb = AppDatabase.getInstance(getApplicationContext());
         //Determine the values of the wanted data
         final TaskEntry taskEntry = mTaskEntries.get(position);
         final String title = taskEntry.getTitle();
@@ -108,11 +108,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.updatedAtView.setText(updatedAt);
         holder.dueDateView.setText(dueDate);
 
-//        if(!dueDate.isEmpty()) {
-//            holder.dueDateView.setText(dueDate);
-//        } else {
-//            holder.dueDateView.setText(" ");
-//        }
+        if(!dueDate.isEmpty()) {
+            holder.dueDateView.setText(dueDate);
+        } else {
+            holder.dueDateView.setText(" ");
+        }
 
         //Programmatically set the text and color for the priority TextView
         String priorityString = "" + priority;
@@ -125,34 +125,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         isCompleted = taskEntry.getCompleted();
         Log.d(LOG_TAG, "************** iscompleted = " + isCompleted);
         holder.checkBoxView.setChecked(isCompleted);
-
-//        MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
-
-//        position = holder.getAdapterPosition();
-//        // Observe the LiveData object in the ViewModel
-//        viewModel.getCompletedTasks().observe((LifecycleOwner) mContext, new Observer<List<TaskEntry>>() {
-//            @Override
-//            public void onChanged(@Nullable List<TaskEntry> taskEntries) {
-//                Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
-//                if(isCompleted = taskEntry.getCompleted()) {
-//                    holder.checkBoxView.setChecked(isCompleted);
-//                }
-//            }
-//        });
-
-//
-//         MainViewModel viewModel = ViewModelProviders.of((FragmentActivity) mContext).get(MainViewModel.class);
-//
-//        position = holder.getAdapterPosition();
-//
-//        //Observe the LiveData object in the ViewModel
-//        viewModel.isTaskCompleted(isCompleted).observe((LifecycleOwner) mContext, isChecked -> {
-//            if(holder.checkBoxView.isChecked()) {
-//                holder.checkBoxView.setChecked(true);
-//            } else {
-//                holder.checkBoxView.setChecked(false);
-//            }
-//        });
 
     }
 

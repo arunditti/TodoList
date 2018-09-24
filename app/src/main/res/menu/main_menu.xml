@@ -8,9 +8,21 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/completed_task"
+        android:title="@string/task_completed"
+        android:orderInCategory="200"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/delete_all_task"
+        android:title="@string/delete_all_task"
+        android:orderInCategory="300"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/sign_out_menu"
         android:title="@string/sign_out"
-        android:orderInCategory="200"
+        android:orderInCategory="400"
         app:showAsAction="never"/>
 
 </menu>

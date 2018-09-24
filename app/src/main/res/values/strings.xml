@@ -12,7 +12,8 @@
     <string name="all_task">All Tasks</string>
     <string name="task_by_priority">Tasks by Priority</string>
     <string name="task_by_due_date">Tasks by Due Date</string>
-    <string name="task_completed">Tasks completed</string>
+    <string name="task_completed">Tasks Completed</string>
+    <string name="delete_all_task"> Delete all</string>
 
 
     <!-- Strings for MainActivity -->
@@ -56,4 +57,9 @@
     <string name="add_widget">Add widget</string>
 
     <string name="error_message">An error has occured. Please try again by clicking REFRESH</string>
+
+    <!-- Notification strings -->
+    <string name="charging_reminder_notification_title">Anything to add....</string>
+    <string name="charging_reminder_notification_body">Lets add a new task...</string>
+    <string name="main_notification_channel_name">Primary</string>
 </resources>

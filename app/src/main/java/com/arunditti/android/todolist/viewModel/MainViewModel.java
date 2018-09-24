@@ -47,4 +47,8 @@ public class MainViewModel extends AndroidViewModel {
         return mTaskRepository.isTaskCompleted(taskCompleted);
     }
 
+    public LiveData<List<TaskEntry>> getTaskCompleted() {
+        return mTaskRepository.loadCompletedTask();
+    }
+
 }

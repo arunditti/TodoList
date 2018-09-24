@@ -46,7 +46,6 @@ public class TaskRepository {
         return mTaskDao.loadTaskByCategory(category);
     }
 
-
     public LiveData<TaskEntry> loadTaskById(int id) {
         return mTaskDao.loadTaskById(id);
     }
@@ -55,93 +54,7 @@ public class TaskRepository {
         return mTaskDao.isTaskCompleted(taskCompleted);
     }
 
-//    public void loadTasksByCategory(String  category) {
-//        new loadTasksByCategoryAsyncTask(mTaskDao).execute(category);
-//    }
-//
-//    private static class loadTasksByCategoryAsyncTask extends AsyncTask<String , Void, List<TaskEntry>> {
-//
-//        private TaskDao mTaskDao;
-//
-//        loadTasksByCategoryAsyncTask(TaskDao dao) {
-//            this.mTaskDao = dao;
-//        }
-//        @Override
-//        protected List<TaskEntry> doInBackground(String ... params) {
-//            mTaskDao.loadTasksByCategory(params[0]);
-//            return null;
-//        }
-//    }
-
-//    public void insertTask(TaskEntry taskEntry) {
-//        new insertTaskAsyncTask(mTaskDao).execute(taskEntry);
-//    }
-//
-//    private static class insertTaskAsyncTask extends AsyncTask<TaskEntry, Void, Void> {
-//
-//        private TaskDao mTaskDao;
-//
-//        insertTaskAsyncTask(TaskDao dao) {
-//            this.mTaskDao = dao;
-//        }
-//        @Override
-//        protected Void doInBackground(TaskEntry... taskEntries) {
-//            mTaskDao.insertTask(taskEntries[0]);
-//            return null;
-//        }
-//    }
-
-//    public void updateTask(TaskEntry taskEntry) {
-//        new updateTaskAsyncTask(mTaskDao).execute(taskEntry);
-//    }
-//
-//    private static class updateTaskAsyncTask extends AsyncTask<TaskEntry, Void, Void> {
-//
-//        private TaskDao mTaskDao;
-//
-//        updateTaskAsyncTask(TaskDao dao) {
-//            this.mTaskDao = dao;
-//        }
-//        @Override
-//        protected Void doInBackground(TaskEntry... taskEntries) {
-//            mTaskDao.insertTask(taskEntries[0]);
-//            return null;
-//        }
-//    }
-
-//    public void deleteTask(TaskEntry taskEntry) {
-//        new DeleteTaskAsyncTask(mTaskDao).execute(taskEntry);
-//    }
-//
-//    private static class DeleteTaskAsyncTask extends AsyncTask<TaskEntry, Void, Void> {
-//        private TaskDao taskDao;
-//
-//        public DeleteTaskAsyncTask(TaskDao mTaskDao) {
-//            this.taskDao = mTaskDao;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(TaskEntry... taskEntries) {
-//            taskDao.deleteTask(taskEntries[0]);
-//            return null;
-//        }
-//    }
-
-//    public void deleteAllTask() {
-//        new DeleteTaskAsyncTask(mTaskDao).execute();
-//    }
-//
-//    private static class DeleteAllTaskAsyncTask extends AsyncTask<Void, Void, Void> {
-//        private TaskDao taskDao;
-//
-//        public DeleteAllTaskAsyncTask(TaskDao mTaskDao) {
-//            this.taskDao = mTaskDao;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//            taskDao.deleteAllTask();
-//            return null;
-//        }
-//    }
+    public LiveData<List<TaskEntry>> loadCompletedTask() {
+        return mTaskDao.loadCompletedTask();
+    }
 }
