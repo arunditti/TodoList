@@ -32,6 +32,7 @@ public class NotificationUtils {
         // Get the NotificationManager using context.getSystemService
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
+
         // Create a notification channel for Android O devices
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel mChannel = new NotificationChannel(

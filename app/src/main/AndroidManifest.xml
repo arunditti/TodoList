@@ -9,7 +9,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".ui.activities.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
@@ -20,11 +20,14 @@
         </activity>
         <activity
             android:name=".ui.activities.AddTaskActivity"
-            android:parentActivityName=".ui.activities.MainActivity" />
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:label="@string/settings"
-            android:parentActivityName=".ui.activities.MainActivity" />
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:theme="@style/AppTheme"/>
 
         <receiver android:name=".widget.TodoListWidgetProvider">
             <intent-filter>

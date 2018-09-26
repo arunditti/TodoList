@@ -1,15 +1,22 @@
 package com.arunditti.android.todolist.ui.activities;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -78,6 +85,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     // Member variable for the Database
     private AppDatabase mDb;
 
+    @BindView(R.id.appbar_activity_add_task) AppBarLayout appBarLayout;
     @BindView(R.id.toolbar_activity_add_task) Toolbar toolbar;
     @BindView(R.id.editTextTaskTitle) EditText mEditTextTitle;
     @BindView(R.id.editTextTaskDescription) EditText mEditTextDescription;
@@ -86,8 +94,21 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     @BindView(R.id.completed) AppCompatCheckBox mCheckbox;
     @BindView(R.id.tv_due_date) TextView mTextViewDueDate;
     @BindView(R.id.button_date) Button mDateDialog;
-    @BindView(R.id.button_save) Button mButton;
+//    @BindView(R.id.button_save) Button mButton;
 
+    private boolean mTaskHasChanged = false;
+
+    /**
+     * OnTouchListener that listens for any user touches on a View, implying that they are modifying
+     * the view, and we change the mPetHasChanged boolean to true.
+     */
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mTaskHasChanged = true;
+            return false;
+        }
+    };
 
 
     @Override
@@ -98,9 +119,19 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         ButterKnife.bind(this);
 
 
+        mEditTextTitle.setOnTouchListener(mTouchListener);
+        mEditTextDescription.setOnTouchListener(mTouchListener);
+        mRadioGroup.setOnTouchListener(mTouchListener);
+        mSpinnerCategory.setOnTouchListener(mTouchListener);
+        mCheckbox.setOnTouchListener(mTouchListener);
+        mDateDialog.setOnTouchListener(mTouchListener);
+        mTextViewDueDate.setOnTouchListener(mTouchListener);
+
+
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_activity_add_task);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.tv_edit_task_title));
 
         spinner = findViewById(R.id.spinner);
 
@@ -120,7 +151,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_TASK_ID)) {
-            mButton.setText(R.string.update_button);
+            //mButton.setText(R.string.update_button);
+            getSupportActionBar().setTitle(getString(R.string.tv_update_task_title));
 
             if (mTaskId == DEFAULT_TASK_ID) {
                 // populate the UI
@@ -175,14 +207,14 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                 showDatePickerDialog();
             }
         });
-
-        //mButton = findViewById(R.id.button_save);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onSaveButtonClicked();
-            }
-        });
+//
+//        //mButton = findViewById(R.id.button_save);
+//        mButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onSaveButtonClicked();
+//            }
+//        });
     }
 
     /**
@@ -324,5 +356,96 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private void showDatePickerDialog(){
         DatePickerFragment datePicker = new DatePickerFragment();
         datePicker.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+       getMenuInflater().inflate(R.menu.menu_editor, menu);
+       return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // User clicked on a menu option in the app bar overflow menu
+        switch (item.getItemId()) {
+            // Respond to a click on the "Save" menu option
+            case R.id.action_save:
+                //Save the task to database
+                onSaveButtonClicked();
+                //Exit Activity
+                finish();
+                return true;
+
+            // Respond to a click on the "Up" arrow button in the app bar
+            case android.R.id.home:
+                // If the task hasn't changed, continue with navigating up to parent activity
+                if (!mTaskHasChanged) {
+                    NavUtils.navigateUpFromSameTask(AddTaskActivity.this);
+                    return true;
+                }
+
+                // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+                // Create a click listener to handle the user confirming that
+                // changes should be discarded.
+                DialogInterface.OnClickListener discardButtonClickListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // User clicked "Discard" button, navigate to parent activity.
+                                NavUtils.navigateUpFromSameTask(AddTaskActivity.this);
+                            }
+                        };
+
+                // Show a dialog that notifies the user they have unsaved changes
+                showUnsavedChangesDialog(discardButtonClickListener);
+                return true;
+        }
+        
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // If the task hasn't changed, continue with handling back button press
+        if (!mTaskHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+
+
+        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+        // Create a click listener to handle the user confirming that changes should be discarded.
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+
+        // Show dialog that there are unsaved changes
+        showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog and continue editing the task.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
