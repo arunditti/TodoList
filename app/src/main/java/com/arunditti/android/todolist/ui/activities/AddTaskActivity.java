@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -93,8 +95,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     @BindView(R.id.radioGroup) RadioGroup mRadioGroup;
     @BindView(R.id.completed) AppCompatCheckBox mCheckbox;
     @BindView(R.id.tv_due_date) TextView mTextViewDueDate;
-    @BindView(R.id.button_date) Button mDateDialog;
-//    @BindView(R.id.button_save) Button mButton;
+    @BindView(R.id.ib_date)  ImageButton mIbDate;
 
     private boolean mTaskHasChanged = false;
 
@@ -118,13 +119,12 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         ButterKnife.bind(this);
 
-
         mEditTextTitle.setOnTouchListener(mTouchListener);
         mEditTextDescription.setOnTouchListener(mTouchListener);
         mRadioGroup.setOnTouchListener(mTouchListener);
         mSpinnerCategory.setOnTouchListener(mTouchListener);
         mCheckbox.setOnTouchListener(mTouchListener);
-        mDateDialog.setOnTouchListener(mTouchListener);
+        mIbDate.setOnTouchListener(mTouchListener);
         mTextViewDueDate.setOnTouchListener(mTouchListener);
 
 
@@ -199,22 +199,20 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         mCalender = Calendar.getInstance();
 
-        //mDateDialog = findViewById(R.id.button_date);
-        mDateDialog.setOnClickListener(new View.OnClickListener() {
+        mIbDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mDatePickerDialog.show();
                 showDatePickerDialog();
             }
         });
-//
-//        //mButton = findViewById(R.id.button_save);
-//        mButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                onSaveButtonClicked();
-//            }
-//        });
+
+        FloatingActionButton fabButton = findViewById(R.id.fab_save_task);
+        fabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSaveButtonClicked();
+            }
+        });
     }
 
     /**
@@ -358,23 +356,23 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         datePicker.show(getSupportFragmentManager(), "datePicker");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-       getMenuInflater().inflate(R.menu.menu_editor, menu);
-       return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//       getMenuInflater().inflate(R.menu.menu_editor, menu);
+//       return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
-            // Respond to a click on the "Save" menu option
-            case R.id.action_save:
-                //Save the task to database
-                onSaveButtonClicked();
-                //Exit Activity
-                finish();
-                return true;
+//            // Respond to a click on the "Save" menu option
+//            case R.id.action_save:
+//                //Save the task to database
+//                onSaveButtonClicked();
+//                //Exit Activity
+//                finish();
+//                return true;
 
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
@@ -411,8 +409,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             super.onBackPressed();
             return;
         }
-
-
         // Otherwise if there are unsaved changes, setup a dialog to warn the user.
         // Create a click listener to handle the user confirming that changes should be discarded.
         DialogInterface.OnClickListener discardButtonClickListener =

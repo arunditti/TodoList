@@ -18,14 +18,13 @@
     <string name="task_completed">Tasks Completed</string>
     <string name="delete_all_task"> Delete all</string>
 
-    <!-- Dialog message when user is leaving editor but hasn't saved changes [CHAR LIMIT=NONE] -->
+    <!-- Dialog message -->
     <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
-
-    <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
     <string name="discard">Discard</string>
-
-    <!-- Dialog button text for the option to keep editing the current pet [CHAR LIMIT=20] -->
     <string name="keep_editing">Keep Editing</string>
+    <string name="warning_delete_all">Are you sure you want to delete all tasks?</string>
+    <string name="discard_delete_all">Discard</string>
+    <string name="yes_delete_all_tasks">Yes</string>
 
 
 
@@ -33,6 +32,7 @@
     <string name="priority_1">1</string>
     <string name="priority_2">2</string>
     <string name="priority_3">3</string>
+    <string name="share_task">Share Task</string>
 
     <!-- Strings for AddTaskActivity -->
     <!-- This etaskEntrytask has a unicode character for "..." = "&#8230;" -->

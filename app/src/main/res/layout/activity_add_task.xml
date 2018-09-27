@@ -1,179 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context="com.arunditti.android.todolist.ui.activities.AddTaskActivity">
+    android:layout_height="match_parent">
 
-<android.support.constraint.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar_activity_add_task"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        style="AppTheme.AppBarOverlay"
-        android:elevation="4dp"
-        tools:ignore="UnusedAttribute">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_activity_add_task"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            app:theme="@style/ToolbardBackArrow"
-            android:background="@color/colorPrimary"
-            app:titleTextColor="@color/white"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
-
-    <LinearLayout
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="48dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp">
+        android:fillViewport="true"
+        tools:context="com.arunditti.android.todolist.ui.activities.AddTaskActivity">
 
-        <EditText
-            android:id="@+id/editTextTaskTitle"
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:hint="@string/edit_task_title"
-            android:paddingBottom="@dimen/activity_horizontal_margin" />
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
-        <!-- EditText for getttaskEntrytask description input -->
-        <EditText
-            android:id="@+id/editTextTaskDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:hint="@string/edit_task_description"
-            android:paddingBottom="@dimen/activity_horizontal_margin" />
-
-        <!-- TextView and FrameLayout (which contains buttons) for Priority Selection -->
-        <TextView
-            style="@style/TextAppearance.AppCompat.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/priority_string"
-            android:textColor="@android:color/primary_text_light" />
-
-        <!-- RadioGroup for visible selection of a priority -->
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:orientation="horizontal"
-            android:weightSum="3">
-
-            <RadioButton
-                android:id="@+id/radButton1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/materialRed"
-                android:checked="true"
-                android:text="@string/high_priority"
-                android:theme="@style/WhiteRadioButton" />
-
-            <RadioButton
-                android:id="@+id/radButton2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/materialOrange"
-                android:text="@string/med_priority"
-                android:theme="@style/WhiteRadioButton" />
-
-            <RadioButton
-                android:id="@+id/radButton3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/materialYellow"
-                android:text="@string/low_priority"
-                android:theme="@style/WhiteRadioButton" />
-
-        </RadioGroup>
-
-        <FrameLayout
-            android:id="@+id/frameLayout_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/rectangle_outline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radioGroup">
-
-            <Spinner
-                android:id="@+id/spinner"
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar_activity_add_task"
+                style="AppTheme.AppBarOverlay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:padding="16dp" />
-        </FrameLayout>
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:elevation="4dp"
+                tools:ignore="UnusedAttribute">
 
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/completed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar_activity_add_task"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:background="@color/colorPrimary"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    app:theme="@style/ToolbardBackArrow"
+                    app:titleTextColor="@color/white">
 
-
-        <Button
-            android:id="@+id/button_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/set_date" />
-
-        <TextView
-            android:id="@+id/tv_due_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="Due Date"
-            android:paddingTop="16dp"
-            android:padding="16dp"
-            tools:text="@string/has_no_due_date"/>
+                </android.support.v7.widget.Toolbar>
+            </android.support.design.widget.AppBarLayout>
 
 
-        <!-- Add button -->
-        <!--<Button-->
-            <!--android:id="@+id/button_save"-->
-            <!--style="@style/TextAppearance.AppCompat.Large"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:background="@color/colorPrimary"-->
-            <!--android:text="@string/add_button"-->
-            <!--android:textColor="@android:color/primary_text_dark" />-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="48dp">
 
-    </LinearLayout>
-</android.support.constraint.ConstraintLayout>
-</ScrollView>
+                <EditText
+                    android:id="@+id/editTextTaskTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:hint="@string/edit_task_title"
+                    android:paddingBottom="@dimen/activity_horizontal_margin" />
+
+                <!-- EditText for getttaskEntrytask description input -->
+                <EditText
+                    android:id="@+id/editTextTaskDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:hint="@string/edit_task_description"
+                    android:paddingBottom="@dimen/activity_horizontal_margin" />
+
+                <!-- TextView and FrameLayout (which contains buttons) for Priority Selection -->
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/priority_string"
+                    android:textColor="@android:color/primary_text_light" />
+
+                <!-- RadioGroup for visible selection of a priority -->
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <RadioButton
+                        android:id="@+id/radButton1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/materialRed"
+                        android:checked="true"
+                        android:text="@string/high_priority"
+                        android:theme="@style/WhiteRadioButton" />
+
+                    <RadioButton
+                        android:id="@+id/radButton2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/materialOrange"
+                        android:text="@string/med_priority"
+                        android:theme="@style/WhiteRadioButton" />
+
+                    <RadioButton
+                        android:id="@+id/radButton3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/materialYellow"
+                        android:text="@string/low_priority"
+                        android:theme="@style/WhiteRadioButton" />
+
+                </RadioGroup>
+
+                <FrameLayout
+                    android:id="@+id/frameLayout_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rectangle_outline"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/radioGroup">
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:padding="16dp" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/completed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/ib_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/set_date"
+                        app:srcCompat="@drawable/baseline_calendar_today_black_18dp"/>
+
+
+                    <TextView
+                    android:id="@+id/tv_due_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:paddingTop="16dp"
+                    android:text="Due Date"
+                    tools:text="@string/has_no_due_date" />
+
+                </LinearLayout>
+
+                <!-- Add button -->
+                <!--<Button-->
+                <!--android:id="@+id/button_save"-->
+                <!--style="@style/TextAppearance.AppCompat.Large"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:background="@color/colorPrimary"-->
+                <!--android:text="@string/add_button"-->
+                <!--android:textColor="@android:color/primary_text_dark" />-->
+
+            </LinearLayout>
+
+        </android.support.design.widget.CoordinatorLayout>
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_save_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_margin="@dimen/fab_margin"
+        android:text="Save"
+        app:layout_anchorGravity="top|right|end"
+        app:srcCompat="@drawable/ic_done" />
+
+</FrameLayout>

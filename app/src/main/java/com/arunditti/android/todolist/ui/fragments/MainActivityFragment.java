@@ -1,5 +1,7 @@
 package com.arunditti.android.todolist.ui.fragments;
 
+import android.content.DialogInterface;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.appwidget.AppWidgetManager;
@@ -12,6 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -75,6 +80,8 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     MainViewModel viewModel;
     private TaskRepository mTaskRepository;
     private int mTaskIndex;
+    private String title;
+    private String description;
     //Interface that triggers a callback in the host activity
     onTaskClickListener mCallBack;
 
@@ -261,15 +268,24 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
                 break;
 
             case R.id.delete_all_task:
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        // get the position from the viewHolder parameter
-                        List<TaskEntry> tasks = mAdapter.getTasks();
-                        // Call deleteTask in the taskDao with the task at that position
-                        mDb.taskDao().deleteAllTask();
-                    }
-                });
+
+                DialogInterface.OnClickListener discardButtonClickListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // get the position from the viewHolder parameter
+                                        List<TaskEntry> tasks = mAdapter.getTasks();
+                                        // Call deleteTask in the taskDao with the task at that position
+                                        mDb.taskDao().deleteAllTask();
+                                    }
+                                });
+                            }
+                        };
+                showUnsavedChangesDialog(discardButtonClickListener);
+                break;
 
             case R.id.sign_out_menu:
                 //Sign out
@@ -281,6 +297,27 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
         }
         return true;
 
+    }
+
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.warning_delete_all);
+        builder.setPositiveButton(R.string.yes_delete_all_tasks, discardButtonClickListener);
+        builder.setNegativeButton(R.string.discard_delete_all, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog and continue editing the task.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        android.app.AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
 

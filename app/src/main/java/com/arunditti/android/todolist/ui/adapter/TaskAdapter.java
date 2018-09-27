@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -22,9 +23,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -126,6 +129,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Log.d(LOG_TAG, "************** iscompleted = " + isCompleted);
         holder.checkBoxView.setChecked(isCompleted);
 
+        holder.shareTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(android.content.Intent.EXTRA_SUBJECT,"Check the attached task");
+                intent.putExtra(Intent.EXTRA_TEXT, "Title:  " + title +
+                        "\nDescription: " + description +
+                "\nDue Date: " + dueDate);
+                intent.setType("text/plain");
+                mContext.startActivity(Intent.createChooser(intent, "Send To"));
+            }
+        });
+
     }
 
     /*
@@ -169,6 +186,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         AppCompatCheckBox checkBoxView;
         TextView updatedAtView;
         TextView dueDateView;
+        ImageButton shareTask;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
@@ -180,6 +198,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             dueDateView = itemView.findViewById(R.id.tv_todo_due_date);
             priorityView = itemView.findViewById(R.id.tv_priority);
             checkBoxView = itemView.findViewById(R.id.completed);
+            shareTask = itemView.findViewById(R.id.share_task);
             itemView.setOnClickListener(this);
             //checkBoxView.setOnClickListener(this);
         }

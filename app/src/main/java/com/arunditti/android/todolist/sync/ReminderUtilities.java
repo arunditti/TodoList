@@ -32,17 +32,6 @@ public class ReminderUtilities {
 
     synchronized public static void scheduleReminder(@NonNull final Context context) {
 
-        Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
-        c.set(year, month, day);
-        c.add(Calendar.DAY_OF_YEAR, +1);
-
-        int i = (int) ( c.getTime().getTime()/1000);
-        Log.d(LOG_TAG, "**************************************The value of i is : " + i);
-
         if (sInitialized) return;
 
         Driver driver = new GooglePlayDriver(context);
@@ -57,8 +46,7 @@ public class ReminderUtilities {
                 .setRecurring(true)
                 .setTrigger(Trigger.executionWindow(
                         REMINDER_INTERVAL_SECONDS,
-                        i //REMINDER_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS
-                ))
+                        REMINDER_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
                 .setReplaceCurrent(true)
                 .build();
 

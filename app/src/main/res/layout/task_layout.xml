@@ -102,5 +102,15 @@
         android:textColor="@android:color/primary_text_light"
         tools:text="1" />
 
+        <ImageButton
+            android:id="@+id/share_task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/share_task"
+            app:srcCompat="@drawable/ic_share_black_24dp"/>
+
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
