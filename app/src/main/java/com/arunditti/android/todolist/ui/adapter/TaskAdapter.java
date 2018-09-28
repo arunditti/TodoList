@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -46,6 +47,9 @@ import com.firebase.ui.auth.AuthUI;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
@@ -107,18 +111,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         final String dueDate = dateFormat.format(taskEntry.getDueDate());
 
         //Set values
-        holder.titleView.setText(title);
-        holder.descriptionView.setText(description);
-        holder.categoryView.setText(category);
+        holder.titleView.setText("Title: " + title);
+        holder.descriptionView.setText("Description: " + description);
+        holder.categoryView.setText("Category: " + category);
 
-        holder.updatedAtView.setText(updatedAt);
-        holder.dueDateView.setText(dueDate);
+        holder.updatedAtView.setText("Updated At: " + updatedAt);
+        holder.dueDateView.setText("Due Date: " + dueDate);
 
-        if(!dueDate.isEmpty()) {
-            holder.dueDateView.setText(dueDate);
-        } else {
-            holder.dueDateView.setText(" ");
-        }
+//        if(!dueDate.isEmpty()) {
+//            holder.dueDateView.setText("Due Date: " + dueDate);
+//        } else {
+//            holder.dueDateView.setText(" ");
+//        }
 
         //Programmatically set the text and color for the priority TextView
         String priorityString = "" + priority;
@@ -205,27 +209,39 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         //Class variables for the task
-        TextView titleView;
-        TextView descriptionView;
-        TextView categoryView;
-        TextView priorityView;
-        AppCompatCheckBox checkBoxView;
-        TextView updatedAtView;
-        TextView dueDateView;
-        ImageButton shareTask;
+//        TextView titleView;
+//        TextView descriptionView;
+//        TextView categoryView;
+//        TextView priorityView;
+//        AppCompatCheckBox checkBoxView;
+//        TextView updatedAtView;
+//        TextView dueDateView;
+//        ImageButton shareTask;
+
+        @BindView(R.id.cv_list) CardView cardView;
+        @BindView(R.id.tv_taskTitle) TextView titleView;
+        @BindView(R.id.tv_taskDescription) TextView descriptionView;
+        @BindView(R.id.tv_category) TextView categoryView;
+        @BindView(R.id.tv_taskUpdatedAt) TextView updatedAtView;
+        @BindView(R.id.tv_todo_due_date) TextView dueDateView;
+        @BindView(R.id.tv_priority) TextView priorityView;
+        @BindView(R.id.completed) AppCompatCheckBox checkBoxView;
+        @BindView(R.id.share_task) ImageButton shareTask;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
-
-            titleView = itemView.findViewById(R.id.tv_taskTitle);
-            descriptionView = itemView.findViewById(R.id.tv_taskDescription);
-            categoryView = itemView.findViewById(R.id.tv_category);
-            updatedAtView = itemView.findViewById(R.id.tv_taskUpdatedAt);
-            dueDateView = itemView.findViewById(R.id.tv_todo_due_date);
-            priorityView = itemView.findViewById(R.id.tv_priority);
-            checkBoxView = itemView.findViewById(R.id.completed);
-            shareTask = itemView.findViewById(R.id.share_task);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
+
+//            titleView = itemView.findViewById(R.id.tv_taskTitle);
+//            descriptionView = itemView.findViewById(R.id.tv_taskDescription);
+//            categoryView = itemView.findViewById(R.id.tv_category);
+//            updatedAtView = itemView.findViewById(R.id.tv_taskUpdatedAt);
+//            dueDateView = itemView.findViewById(R.id.tv_todo_due_date);
+//            priorityView = itemView.findViewById(R.id.tv_priority);
+//            checkBoxView = itemView.findViewById(R.id.completed);
+//            shareTask = itemView.findViewById(R.id.share_task);
+//            itemView.setOnClickListener(this);
             //checkBoxView.setOnClickListener(this);
         }
 

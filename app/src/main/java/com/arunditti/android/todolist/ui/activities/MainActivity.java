@@ -46,7 +46,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         mInterstitialAd.setAdListener(new AdListener() {
-
+            @Override
+            public void onAdFailedToLoad(int taskId) {
+                super.onAdFailedToLoad(taskId);
+                Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
+                intent.putExtra(AddTaskActivity.EXTRA_TASK_ID, taskId);
+                startActivity(intent);
+            }
         });
 
             // Initialize Firebase components
@@ -85,6 +91,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             startActivity(intent);
         }
     }
+
+//    @Override
+//    public void onTaskSelected(int taskId) {
+//            // Launch AddTaskActivity with itemId as extra in the intent for the key AddTaskActivity.EXTRA_TASK_ID
+//            Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
+//            intent.putExtra(AddTaskActivity.EXTRA_TASK_ID, taskId);
+//            startActivity(intent);
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -37,14 +37,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/screenBackgroundGrey">
 
     <!--RecyclerView for holding list of tasks-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_tasks_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/rv_padding_top"
         android:scrollbars="vertical">
     </android.support.v7.widget.RecyclerView>
 
@@ -117,7 +117,6 @@
         android:contentDescription="@string/add_task"
     app:srcCompat="@android:drawable/ic_input_add"
     android:tint="@android:color/white"/>
-
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"

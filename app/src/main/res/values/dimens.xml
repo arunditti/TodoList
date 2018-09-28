@@ -3,12 +3,14 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="margin_4dp">4dp</dimen>
     <dimen name="margin_8dp">8dp</dimen>
     <dimen name="layout_margin_16dp">16dp</dimen>
     <dimen name="margin_32ddp">32dp</dimen>
     <dimen name="padding_16dp">16dp</dimen>
     <dimen name="padding_8dp">8dp</dimen>
     <dimen name="appBar_height">200dp</dimen>
+    <dimen name="card_corner_radius">3dp</dimen>
 
     <dimen name="rv_padding_top">16dp</dimen>
     <dimen name="elevation_4dp">4dp</dimen>
