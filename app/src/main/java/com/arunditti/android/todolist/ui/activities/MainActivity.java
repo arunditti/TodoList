@@ -14,6 +14,9 @@ import com.arunditti.android.todolist.database.TaskRepository;
 import com.arunditti.android.todolist.ui.fragments.MainActivityFragment;
 import com.arunditti.android.todolist.viewModel.MainViewModel;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     public static final int RC_SIGN_IN = 1;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +41,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_id));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
-        // Initialize Firebase components
+        mInterstitialAd.setAdListener(new AdListener() {
+
+        });
+
+            // Initialize Firebase components
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -65,10 +76,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
     @Override
     public void onTaskSelected(int taskId) {
+        if(mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
             // Launch AddTaskActivity with itemId as extra in the intent for the key AddTaskActivity.EXTRA_TASK_ID
             Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
             intent.putExtra(AddTaskActivity.EXTRA_TASK_ID, taskId);
             startActivity(intent);
+        }
     }
 
     @Override

@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:background="@color/colorPrimary"
-                android:elevation="4dp"
+                android:elevation="@dimen/elevation_4dp"
                 tools:ignore="UnusedAttribute">
 
                 <android.support.v7.widget.Toolbar
@@ -47,9 +47,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingBottom="16dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingBottom="@dimen/padding_16dp"
+                android:paddingLeft="@dimen/padding_16dp"
+                android:layout_marginStart="@dimen/padding_16dp"
+                android:paddingRight="@dimen/padding_16dp"
+                android:paddingEnd="@dimen/padding_16dp"
                 android:paddingTop="48dp">
 
                 <EditText
@@ -75,8 +77,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="@dimen/margin_8dp"
+                    android:layout_marginTop="@dimen/margin_8dp"
                     android:text="@string/priority_string"
                     android:textColor="@android:color/primary_text_light" />
 
@@ -84,7 +86,7 @@
                 <RadioGroup
                     android:id="@+id/radioGroup"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/radio_group_height"
                     android:layout_gravity="center"
                     android:layout_marginBottom="@dimen/activity_horizontal_margin"
                     android:orientation="horizontal"
@@ -124,9 +126,9 @@
                     android:id="@+id/frameLayout_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_margin="@dimen/layout_margin_16dp"
+                    android:layout_marginLeft="@dimen/margin_8dp"
+                    android:layout_marginStart="@dimen/margin_8dp"
                     android:background="@drawable/rectangle_outline"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/radioGroup">
@@ -135,12 +137,12 @@
                         android:id="@+id/spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:padding="16dp" />
+                        android:layout_marginEnd="@dimen/margin_8dp"
+                        android:layout_marginLeft="@dimen/margin_8dp"
+                        android:layout_marginRight="@dimen/margin_8dp"
+                        android:layout_marginStart="@dimen/margin_8dp"
+                        android:layout_marginTop="@dimen/margin_8dp"
+                        android:padding="@dimen/padding_16dp" />
                 </FrameLayout>
 
                 <LinearLayout
@@ -161,6 +163,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/set_date"
+                        android:contentDescription="@string/select_due_date"
                         app:srcCompat="@drawable/baseline_calendar_today_black_18dp"/>
 
 
@@ -169,23 +172,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:paddingTop="16dp"
-                    android:text="Due Date"
+                    android:padding="@dimen/padding_16dp"
+                    android:paddingTop="@dimen/padding_16dp"
                     tools:text="@string/has_no_due_date" />
 
                 </LinearLayout>
-
-                <!-- Add button -->
-                <!--<Button-->
-                <!--android:id="@+id/button_save"-->
-                <!--style="@style/TextAppearance.AppCompat.Large"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:background="@color/colorPrimary"-->
-                <!--android:text="@string/add_button"-->
-                <!--android:textColor="@android:color/primary_text_dark" />-->
 
             </LinearLayout>
 
@@ -199,6 +190,7 @@
         android:layout_gravity="top|right"
         android:layout_margin="@dimen/fab_margin"
         android:text="Save"
+        android:contentDescription="@string/save_task"
         app:layout_anchorGravity="top|right|end"
         app:srcCompat="@drawable/ic_done" />
 

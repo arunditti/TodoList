@@ -9,6 +9,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -46,7 +47,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
+import static com.google.android.gms.flags.impl.SharedPreferencesFactory.getSharedPreferences;
 
 /**
  * Created by arunditti on 8/28/18.
@@ -129,6 +132,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Log.d(LOG_TAG, "************** iscompleted = " + isCompleted);
         holder.checkBoxView.setChecked(isCompleted);
 
+        ///////////////////////
+
+//        holder.checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(buttonView.isChecked()) {
+//                    saveCheckBoxStatus(true);
+//                } else {
+//                    saveCheckBoxStatus(false);
+//                }
+//            }
+//        });
+
+        ///////////////////////////
+
         holder.shareTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,6 +162,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         });
 
     }
+
+
+//    private void saveCheckBoxStatus(boolean isCompleted) {
+//        SharedPreferences sharedPreferences = mContext.getSharedPreferences("CheckBox", MODE_PRIVATE);
+//        SharedPreferences.Editor mEditor = sharedPreferences.edit();
+//        mEditor.putBoolean("item", isCompleted);
+//        mEditor.apply();
+//    }
 
     /*
   Helper method for selecting the correct priority circle color.

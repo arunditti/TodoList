@@ -50,6 +50,8 @@ import com.arunditti.android.todolist.utils.AppExecutors;
 import com.arunditti.android.todolist.viewModel.MainViewModel;
 import com.arunditti.android.todolist.widget.TodoListWidgetProvider;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,6 +93,7 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     @BindView(R.id.empty_view) View emptyView;
     @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
     @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
+    @BindView(R.id.adView) AdView mAdView;
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -170,6 +173,14 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
         //Inflate MainActivityFragment layout
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, rootView);
+
+        // get test ads on a physical device. e.g.
+        // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
+
 
         // Initialize member variable for the data base
         mDb = AppDatabase.getInstance(getContext());

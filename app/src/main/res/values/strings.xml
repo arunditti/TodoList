@@ -33,6 +33,8 @@
     <string name="priority_2">2</string>
     <string name="priority_3">3</string>
     <string name="share_task">Share Task</string>
+    <string name="add_task">Add Task</string>
+
 
     <!-- Strings for AddTaskActivity -->
     <!-- This etaskEntrytask has a unicode character for "..." = "&#8230;" -->
@@ -49,6 +51,8 @@
 
     <string name="has_no_due_date">No due date</string>
     <string name="set_date">Enter due date</string>
+    <string name="select_due_date">Select due date</string>
+    <string name="save_task">Save Task</string>
 
     <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
     <string name="empty_view_title_text">It\'s a bit lonely here...</string>
@@ -75,4 +79,8 @@
     <string name="charging_reminder_notification_title">Anything to add....</string>
     <string name="charging_reminder_notification_body">Lets add a new task...</string>
     <string name="main_notification_channel_name">Primary</string>
+
+    <!-- Ads -->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitial_ad_id">ca-app-pub-3940256099942544/1033173712</string>
 </resources>

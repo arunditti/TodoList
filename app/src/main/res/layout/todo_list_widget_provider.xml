@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/layout_margin_8dp"
+        android:layout_margin="@dimen/margin_8dp"
         android:text="@string/app_name"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size"
