@@ -54,6 +54,7 @@ public class NotificationUtils {
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentIntent(contentIntent(context))
                 .setAutoCancel(true);
+                //.setWhen(AddTaskActivity.setTime);
 
         // f the build version is greater than JELLY_BEAN and lower than OREO, set the notification's priority to PRIORITY_HIGH.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN

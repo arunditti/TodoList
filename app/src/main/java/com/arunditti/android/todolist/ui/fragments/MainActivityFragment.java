@@ -2,6 +2,7 @@ package com.arunditti.android.todolist.ui.fragments;
 
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.appwidget.AppWidgetManager;
@@ -76,6 +77,11 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
 
     private static final String RECYCLER_VIEW_STATE = "recycler_view_state";
 
+    private static Parcelable mRecyclerViewState;
+
+    private static final String TASK_KEY = "task_key";
+
+
     private TaskAdapter mAdapter;
     private Toast mToast;
     private AppDatabase mDb;
@@ -86,6 +92,8 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     private String description;
     //Interface that triggers a callback in the host activity
     onTaskClickListener mCallBack;
+
+    ArrayList<TaskEntry> mTask = new ArrayList<TaskEntry>();
 
 
     @BindView(R.id.spinner_main_activity) Spinner mSpinnerMain;
@@ -107,9 +115,9 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
                 }
             });
         } else {
-            String string = parent.getItemAtPosition(position).toString();
+            String category = parent.getItemAtPosition(position).toString();
 
-            viewModel.getTaskByCategory(string).observe(this, new Observer<List<TaskEntry>>() {
+            viewModel.getTaskByCategory(category).observe(this, new Observer<List<TaskEntry>>() {
                 @Override
                 public void onChanged(@Nullable List<TaskEntry> taskEntries) {
                     Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
@@ -158,6 +166,9 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
     }
@@ -174,13 +185,13 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, rootView);
 
-        // get test ads on a physical device. e.g.
-        // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
+        // get test ads on a physical device.
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
         mAdView.loadAd(adRequest);
 
+        viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
         // Initialize member variable for the data base
         mDb = AppDatabase.getInstance(getContext());
@@ -194,9 +205,9 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
         // Initialize the adapter and attach it to the RecyclerView
         mAdapter = new TaskAdapter(getContext(), this);
         mRecyclerView.setAdapter(mAdapter);
-
-        DividerItemDecoration decoration = new DividerItemDecoration(getContext(), VERTICAL);
-        mRecyclerView.addItemDecoration(decoration);
+//
+//        DividerItemDecoration decoration = new DividerItemDecoration(getContext(), VERTICAL);
+//        mRecyclerView.addItemDecoration(decoration);
 
                 /*
          Add a touch helper to the RecyclerView to recognize when a user swipes to delete an item.
@@ -263,7 +274,27 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+//        if (saveInstanceState != null) {
+//            mTask = saveInstanceState.getParcelableArrayList(TASK_KEY);
+//            mAdapter = new TaskAdapter(getContext(), this);
+//            mRecyclerView.setAdapter(mAdapter);
+//        } else {
+//            setupTaskSharedPreferences();
+//        }
+
         return rootView;
+    }
+
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putParcelableArrayList(TASK_KEY, mTask);
+//    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
     }
 
     @Override
@@ -333,7 +364,7 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
 
 
     private void setupViewModelByDate() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+       // viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         // Observe the LiveData object in the ViewModel
 
         viewModel.getTaskByDueDate().observe(this, new Observer<List<TaskEntry>>() {
@@ -347,7 +378,7 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     }
 
     private void setupViewModelByPriority() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+       // viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         // Observe the LiveData object in the ViewModel
 
         viewModel.getTasksByPriority().observe(this, new Observer<List<TaskEntry>>() {
@@ -361,7 +392,7 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     }
 
     private void setupViewModelByTaskCompleted() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+       // viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         // Observe the LiveData object in the ViewModel
 
         viewModel.getTaskCompleted().observe(this, new Observer<List<TaskEntry>>() {
@@ -383,7 +414,6 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
             emptyView.setVisibility(View.GONE);
         }
     }
-
 
     private void setupSpinner() {
 

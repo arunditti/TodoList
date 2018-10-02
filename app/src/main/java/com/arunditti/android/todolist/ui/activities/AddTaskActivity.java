@@ -64,6 +64,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
     // Constant for date format
     private static final String DATE_FORMAT = "MM/dd/yyy";
+    public static long setTime;
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 
     private boolean isCompleted;
@@ -270,6 +271,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
         mDueDate = mCalender.getTime();
        // Log.d(LOG_TAG, "************* due date is: " + mDueDate);
+        setTime = mDueDate.getTime()/1000;
 
         final boolean completed;
         if(mCheckbox.isChecked()) {
@@ -347,7 +349,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         mCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         mDueDate = mCalender.getTime();
 
-//Date one dat before due date
+//Date one date before due date
         //mCalender.add(Calendar.DAY_OF_YEAR, -3);
     }
 
