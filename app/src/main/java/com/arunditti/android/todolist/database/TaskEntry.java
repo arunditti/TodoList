@@ -63,7 +63,8 @@ public class TaskEntry implements Parcelable{
     }
 
     @Ignore
-    public TaskEntry(boolean completed) {
+    public TaskEntry(int id) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.category = category;

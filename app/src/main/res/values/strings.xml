@@ -16,6 +16,7 @@
     <string name="task_by_priority">Tasks by Priority</string>
     <string name="task_by_due_date">Tasks by Due Date</string>
     <string name="task_completed">Tasks Completed</string>
+    <string name="delete_task_completed">Delete Completed Tasks</string>
     <string name="delete_all_task"> Delete all</string>
 
     <!-- Dialog message -->

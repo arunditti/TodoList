@@ -37,9 +37,11 @@ import android.widget.Toast;
 import com.arunditti.android.todolist.R;
 import com.arunditti.android.todolist.database.AppDatabase;
 import com.arunditti.android.todolist.database.TaskEntry;
+import com.arunditti.android.todolist.database.TaskRepository;
 import com.arunditti.android.todolist.ui.activities.AddTaskActivity;
 import com.arunditti.android.todolist.ui.activities.MainActivity;
 import com.arunditti.android.todolist.utils.AppExecutors;
+import com.arunditti.android.todolist.viewModel.AddTaskViewModel;
 import com.arunditti.android.todolist.viewModel.AddTaskViewModelFactory;
 import com.arunditti.android.todolist.viewModel.MainViewModel;
 import com.firebase.ui.auth.AuthUI;
@@ -79,7 +81,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     private static final int DEFAULT_TASK_ID = -1;
     private int mTaskId = DEFAULT_TASK_ID;
     private AppDatabase mDb;
-
+    private TaskRepository mTaskRepository;
 
     public interface ItemClickListener {
         void onItemClickListener(int taskId);
@@ -119,11 +121,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         holder.updatedAtView.setText("Updated At: " + updatedAt);
         holder.dueDateView.setText("Due Date: " + dueDate);
-
-
-        if (dueDate.compareTo(updatedAt) < 0) {
-            holder.dueDateView.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
-        }
+//
+//
+//        if (dueDate.compareTo(updatedAt) < 0) {
+//            holder.dueDateView.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
+//        }
 
 
 
@@ -144,6 +146,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         isCompleted = taskEntry.getCompleted();
         Log.d(LOG_TAG, "************** iscompleted = " + isCompleted);
         holder.checkBoxView.setChecked(isCompleted);
+       // mDb.taskDao().updateCompleted(taskEntry.getId(), isCompleted);
+
+
 
         ///////////////////////
 
@@ -151,9 +156,31 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 //            @Override
 //            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 //                if(buttonView.isChecked()) {
-//                    saveCheckBoxStatus(true);
+//                    holder.checkBoxView.setChecked(true);
+////                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+////                            @Override
+////                            public void run() {
+////                                // get the position from the viewHolder parameter
+////                                List<TaskEntry> tasks = getTasks();
+////                                // Call deleteTask in the taskDao with the task at that position
+////                                mDb.taskDao().updateCompleted(taskEntry.getId(), true);
+////                            }
+////                        });
+//
+//                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            // get the position from the viewHolder parameter
+//                            int position = holder.getAdapterPosition();
+//                            List<TaskEntry> tasks = getTasks();
+//                            Log.d(LOG_TAG, "***************holder.adapterPosition is " + position);
+//                            // Call deleteTask in the taskDao with the task at that position
+//                           mDb.taskDao().updateCompleted(tasks.get(position), isChecked);
+//                        }
+//                    });
+
 //                } else {
-//                    saveCheckBoxStatus(false);
+//                    holder.checkBoxView.setChecked(false);
 //                }
 //            }
 //        });
@@ -176,13 +203,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     }
 
-
-//    private void saveCheckBoxStatus(boolean isCompleted) {
-//        SharedPreferences sharedPreferences = mContext.getSharedPreferences("CheckBox", MODE_PRIVATE);
-//        SharedPreferences.Editor mEditor = sharedPreferences.edit();
-//        mEditor.putBoolean("item", isCompleted);
-//        mEditor.apply();
-//    }
 
     /*
   Helper method for selecting the correct priority circle color.
@@ -232,6 +252,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
+            //checkBoxView.setOnClickListener(this);
         }
 
         @Override

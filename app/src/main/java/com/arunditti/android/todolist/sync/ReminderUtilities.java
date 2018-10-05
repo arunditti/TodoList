@@ -26,9 +26,6 @@ public class ReminderUtilities {
     private static final int REMINDER_INTERVAL_MINUTES = 60;
     private static final int REMINDER_INTERVAL_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(REMINDER_INTERVAL_MINUTES));
 
-//    private static final int REMINDER_INTERVAL_MINUTES = (int) AddTaskActivity.setTime;
-//    private static final int REMINDER_INTERVAL_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(REMINDER_INTERVAL_MINUTES));
-
     private static final int SYNC_FLEXTIME_SECONDS = REMINDER_INTERVAL_SECONDS;
 
     private static final String REMINDER_JOB_TAG = "reminder_tag";

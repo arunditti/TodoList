@@ -28,6 +28,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arunditti.android.todolist.R;
 import com.arunditti.android.todolist.database.AppDatabase;
@@ -55,6 +56,8 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     public static final String EXTRA_TASK_ID = "extraTaskId";
     // Extra for the task ID to be received after rotation
     public static final String INSTANCE_TASK_ID = "instanceTaskId";
+
+    public static final String INSTANCE_DATE = "instanceDate";
     // Constants for priority
     public static final int PRIORITY_HIGH = 1;
     public static final int PRIORITY_MEDIUM = 2;
@@ -74,7 +77,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private Date mDueDate;
     private int mTaskId = DEFAULT_TASK_ID;
 
-    Spinner spinner;
     private String[] categories = {
             "Groceries",
             "Shopping",
@@ -134,12 +136,10 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.tv_edit_task_title));
 
-        spinner = findViewById(R.id.spinner);
-
         // Category spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        mSpinnerCategory.setAdapter(adapter);
 
         initViews();
 
@@ -191,13 +191,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
      */
     private void initViews() {
 
-        //mEditTextTitle = findViewById(R.id.editTextTaskTitle);
-       // mEditTextDescription = findViewById(R.id.editTextTaskDescription);
-        mSpinnerCategory = findViewById(R.id.spinner);
-        //mRadioGroup = findViewById(R.id.radioGroup);
-        //mCheckbox = findViewById(R.id.completed);
-        mTextViewDueDate = findViewById(R.id.tv_due_date);
-
         mCalender = Calendar.getInstance();
 
         mIbDate.setOnClickListener(new View.OnClickListener() {
@@ -234,11 +227,6 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         setPriorityInViews(task.getPriority());
 
         isCompleted = task.getCompleted();
-//        if(isCompleted == TaskEntry.TASK_COMPLETED) {
-//            isCompleted = TaskEntry.TASK_COMPLETED;
-//        } else {
-//            isCompleted = TaskEntry.TASK_NOT_COMPLETED;
-//        }
         mCheckbox.setChecked(isCompleted);
 
         final String dueDate = dateFormat.format(task.getDueDate());
@@ -260,18 +248,16 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         // Create a description variable and assign to it the value in the edit text
         String description = mEditTextDescription.getText().toString();
 
-        String category = spinner.getSelectedItem().toString();
+        String category = mSpinnerCategory.getSelectedItem().toString();
         //Create a priority variable and assign the value returned by getPriorityFromViews()
         int priority = getPriorityFromViews();
 
         // Create a date variable and assign to it the current Date
         mDate = new Date();
 
-        //mDatePickerDialog.updateDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
-
         mDueDate = mCalender.getTime();
        // Log.d(LOG_TAG, "************* due date is: " + mDueDate);
-        setTime = mDueDate.getTime()/1000;
+        //setTime = mDueDate.getTime()/1000;
 
         final boolean completed;
         if(mCheckbox.isChecked()) {
@@ -349,6 +335,12 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
         mCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         mDueDate = mCalender.getTime();
 
+        final String dueDate = dateFormat.format(mDueDate);
+        if(dueDate.isEmpty()) {
+            mTextViewDueDate.setText("");
+        } else {
+            mTextViewDueDate.setText(dueDate);
+        }
 //Date one date before due date
         //mCalender.add(Calendar.DAY_OF_YEAR, -3);
     }

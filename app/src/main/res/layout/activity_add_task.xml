@@ -43,13 +43,30 @@
             </android.support.design.widget.AppBarLayout>
 
 
+            <android.support.v7.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/cv_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_4dp"
+                android:layout_marginRight="@dimen/margin_4dp"
+                android:layout_marginStart="@dimen/margin_4dp"
+                android:layout_marginEnd="@dimen/margin_4dp"
+                android:layout_marginTop="@dimen/padding_16dp"
+                android:layout_marginBottom="@dimen/margin_4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?selectableItemBackground">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/padding_16dp"
-                android:paddingLeft="@dimen/padding_16dp"
-                android:layout_marginStart="@dimen/padding_16dp"
+                android:paddingLeft="@dimen/padding_8dp"
+                android:layout_marginStart="@dimen/padding_8dp"
                 android:paddingRight="@dimen/padding_16dp"
                 android:paddingEnd="@dimen/padding_16dp"
                 android:paddingTop="48dp">
@@ -155,6 +172,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:text="Task Completed"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -162,7 +180,8 @@
                         android:id="@+id/ib_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/set_date"
+                        android:layout_marginStart="@dimen/padding_16dp"
+                        android:layout_marginLeft="@dimen/padding_16dp"
                         android:contentDescription="@string/select_due_date"
                         app:srcCompat="@drawable/baseline_calendar_today_black_18dp"/>
 
@@ -172,13 +191,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:padding="@dimen/padding_16dp"
+                    android:layout_marginStart="@dimen/margin_8dp"
+                        android:layout_marginLeft="@dimen/margin_8dp"
                     android:paddingTop="@dimen/padding_16dp"
                     tools:text="@string/has_no_due_date" />
 
                 </LinearLayout>
 
             </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
         </android.support.design.widget.CoordinatorLayout>
     </ScrollView>
@@ -190,8 +212,11 @@
         android:layout_gravity="top|right"
         android:layout_margin="@dimen/fab_margin"
         android:text="Save"
+        android:clickable="true"
+        android:focusable="true"
         android:contentDescription="@string/save_task"
         app:layout_anchorGravity="top|right|end"
         app:srcCompat="@drawable/ic_done" />
+
 
 </FrameLayout>

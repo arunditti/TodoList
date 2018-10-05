@@ -18,6 +18,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -114,6 +115,7 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
                     setEmptyView(taskEntries);
                 }
             });
+
         } else {
             String category = parent.getItemAtPosition(position).toString();
 
@@ -274,22 +276,8 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-//        if (saveInstanceState != null) {
-//            mTask = saveInstanceState.getParcelableArrayList(TASK_KEY);
-//            mAdapter = new TaskAdapter(getContext(), this);
-//            mRecyclerView.setAdapter(mAdapter);
-//        } else {
-//            setupTaskSharedPreferences();
-//        }
-
         return rootView;
     }
-
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putParcelableArrayList(TASK_KEY, mTask);
-//    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -307,6 +295,25 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
 
             case R.id.completed_task:
                 setupViewModelByTaskCompleted();
+                break;
+
+            case R.id.delete_completed_task:
+
+                DialogInterface.OnClickListener discardButtonClickListener1 =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // get the position from the viewHolder parameter
+                                        List<TaskEntry> tasks = mAdapter.getTasks();
+                                        mDb.taskDao().deleteCompletedTasks();
+                                    }
+                                });
+                            }
+                        };
+                showUnsavedChangesDialog(discardButtonClickListener1);
                 break;
 
             case R.id.delete_all_task:
@@ -364,8 +371,6 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
 
 
     private void setupViewModelByDate() {
-       // viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-        // Observe the LiveData object in the ViewModel
 
         viewModel.getTaskByDueDate().observe(this, new Observer<List<TaskEntry>>() {
             @Override
@@ -378,8 +383,6 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     }
 
     private void setupViewModelByPriority() {
-       // viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-        // Observe the LiveData object in the ViewModel
 
         viewModel.getTasksByPriority().observe(this, new Observer<List<TaskEntry>>() {
             @Override
@@ -392,8 +395,6 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     }
 
     private void setupViewModelByTaskCompleted() {
-       // viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-        // Observe the LiveData object in the ViewModel
 
         viewModel.getTaskCompleted().observe(this, new Observer<List<TaskEntry>>() {
             @Override
