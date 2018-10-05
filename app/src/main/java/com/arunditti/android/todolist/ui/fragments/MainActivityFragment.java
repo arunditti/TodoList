@@ -118,15 +118,17 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
 
         } else {
             String category = parent.getItemAtPosition(position).toString();
+            setupViewModelByCategory(category);
+//
+//            viewModel.getTaskByCategory(category).observe(this, new Observer<List<TaskEntry>>() {
+//                @Override
+//                public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+//                    Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+//                    mAdapter.setTasks(taskEntries);
+//                    setEmptyView(taskEntries);
+//                }
+//            });
 
-            viewModel.getTaskByCategory(category).observe(this, new Observer<List<TaskEntry>>() {
-                @Override
-                public void onChanged(@Nullable List<TaskEntry> taskEntries) {
-                    Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
-                    mAdapter.setTasks(taskEntries);
-                    setEmptyView(taskEntries);
-                }
-            });
         }
 // Showing selected spinner item
         mTaskIndex = position;
@@ -228,18 +230,25 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
                 // Here is where you'll implement swipe to delete
                 // Get the diskIO Executor from the instance of AppExecutors and
                 // call the diskIO execute method with a new Runnable and implement its run method
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        // get the position from the viewHolder parameter
-                        int position = viewHolder.getAdapterPosition();
-                        List<TaskEntry> tasks = mAdapter.getTasks();
-                        // Call deleteTask in the taskDao with the task at that position
-                        mDb.taskDao().deleteTask(tasks.get(position));
-                    }
-                });
+//                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // get the position from the viewHolder parameter
+//                        int position = viewHolder.getAdapterPosition();
+//                        List<TaskEntry> tasks = mAdapter.getTasks();
+//                        // Call deleteTask in the taskDao with the task at that position
+//                        mDb.taskDao().deleteTask(tasks.get(position));
+//                    }
+//                });
+//            }
+//        }).attachToRecyclerView(mRecyclerView);
+
+                // get the position from the viewHolder parameter
+                int position = viewHolder.getAdapterPosition();
+                List<TaskEntry> tasks = mAdapter.getTasks();
+                viewModel.deleteTask(tasks.get(position));
             }
-        }).attachToRecyclerView(mRecyclerView);
+            }).attachToRecyclerView(mRecyclerView);
 
         /*
          Set the Floating Action Button (FAB) to its corresponding View.
@@ -282,7 +291,7 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
     }
 
     @Override
@@ -295,6 +304,9 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
 
             case R.id.completed_task:
                 setupViewModelByTaskCompleted();
+                //viewModel.getTaskCompleted();
+
+
                 break;
 
             case R.id.delete_completed_task:
@@ -318,22 +330,24 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
 
             case R.id.delete_all_task:
 
-                DialogInterface.OnClickListener discardButtonClickListener =
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // get the position from the viewHolder parameter
-                                        List<TaskEntry> tasks = mAdapter.getTasks();
-                                        // Call deleteTask in the taskDao with the task at that position
-                                        mDb.taskDao().deleteAllTask();
-                                    }
-                                });
-                            }
-                        };
-                showUnsavedChangesDialog(discardButtonClickListener);
+//                DialogInterface.OnClickListener discardButtonClickListener =
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        // get the position from the viewHolder parameter
+//                                        List<TaskEntry> tasks = mAdapter.getTasks();
+//                                        // Call deleteTask in the taskDao with the task at that position
+//                                        mDb.taskDao().deleteAllTask();
+//                                    }
+//                                });
+//                            }
+//                        };
+//                showUnsavedChangesDialog(discardButtonClickListener);
+
+                viewModel.deleteAllTasks();
                 break;
 
             case R.id.sign_out_menu:
@@ -397,6 +411,18 @@ public class MainActivityFragment extends Fragment implements TaskAdapter.ItemCl
     private void setupViewModelByTaskCompleted() {
 
         viewModel.getTaskCompleted().observe(this, new Observer<List<TaskEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+                Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+                mAdapter.setTasks(taskEntries);
+                setEmptyView(taskEntries);
+            }
+        });
+    }
+
+    private void setupViewModelByCategory(String category) {
+
+        viewModel.getTaskByCategory(category).observe(this, new Observer<List<TaskEntry>>() {
             @Override
             public void onChanged(@Nullable List<TaskEntry> taskEntries) {
                 Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");

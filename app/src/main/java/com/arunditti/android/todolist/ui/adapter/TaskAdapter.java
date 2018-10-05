@@ -82,6 +82,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     private int mTaskId = DEFAULT_TASK_ID;
     private AppDatabase mDb;
     private TaskRepository mTaskRepository;
+    MainViewModel viewModel;
 
     public interface ItemClickListener {
         void onItemClickListener(int taskId);

@@ -75,6 +75,8 @@ public class TaskRepository {
 
 
 
+
+
 //    public void completeTask(@NonNull TaskEntry taskEntry) {
 //
 //        Runnable completeRunnable = new Runnable() {
@@ -125,7 +127,7 @@ public class TaskRepository {
 //            return null;
 //        }
 //    }
-
+//
 //    public void updateTask(TaskEntry taskEntry) {
 //        new updateTaskAsyncTask(mTaskDao).execute(taskEntry);
 //    }
@@ -144,39 +146,39 @@ public class TaskRepository {
 //        }
 //    }
 
-//    public void deleteTask(TaskEntry taskEntry) {
-//        new DeleteTaskAsyncTask(mTaskDao).execute(taskEntry);
-//    }
-//
-//    private static class DeleteTaskAsyncTask extends AsyncTask<TaskEntry, Void, Void> {
-//        private TaskDao taskDao;
-//
-//        public DeleteTaskAsyncTask(TaskDao mTaskDao) {
-//            this.taskDao = mTaskDao;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(TaskEntry... taskEntries) {
-//            taskDao.deleteTask(taskEntries[0]);
-//            return null;
-//        }
-//    }
+    public void deleteTask(TaskEntry taskEntry) {
+        new DeleteTaskAsyncTask(mTaskDao).execute(taskEntry);
+    }
 
-//    public void deleteAllTask() {
-//        new DeleteTaskAsyncTask(mTaskDao).execute();
-//    }
-//
-//    private static class DeleteAllTaskAsyncTask extends AsyncTask<Void, Void, Void> {
-//        private TaskDao taskDao;
-//
-//        public DeleteAllTaskAsyncTask(TaskDao mTaskDao) {
-//            this.taskDao = mTaskDao;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//            taskDao.deleteAllTask();
-//            return null;
-//        }
-//    }
+    private static class DeleteTaskAsyncTask extends AsyncTask<TaskEntry, Void, Void> {
+        private TaskDao taskDao;
+
+        public DeleteTaskAsyncTask(TaskDao mTaskDao) {
+            this.taskDao = mTaskDao;
+        }
+
+        @Override
+        protected Void doInBackground(TaskEntry... taskEntries) {
+            taskDao.deleteTask(taskEntries[0]);
+            return null;
+        }
+    }
+
+    public void deleteAllTask() {
+        new DeleteAllTaskAsyncTask(mTaskDao).execute();
+    }
+
+    private static class DeleteAllTaskAsyncTask extends AsyncTask<Void, Void, Void> {
+        private TaskDao taskDao;
+
+        public DeleteAllTaskAsyncTask(TaskDao mTaskDao) {
+            this.taskDao = mTaskDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            taskDao.deleteAllTask();
+            return null;
+        }
+    }
 }

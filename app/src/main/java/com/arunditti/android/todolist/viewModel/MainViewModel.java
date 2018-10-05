@@ -30,7 +30,6 @@ public class MainViewModel extends AndroidViewModel {
     private LiveData<List<TaskEntry>> tasks1;
     private LiveData<List<TaskEntry>> tasks2;
     private LiveData<List<TaskEntry>> tasks3;
-    private LiveData<List<TaskEntry>> tasks4;
 
     public MainViewModel(Application application) {
         super(application);
@@ -40,7 +39,6 @@ public class MainViewModel extends AndroidViewModel {
         tasks1 = mTaskRepository.loadAllTaskByPriority();
         tasks2 = mTaskRepository.loadAllTasksByDueDate();
         tasks3 = mTaskRepository.loadCompletedTask();
-        tasks4 = mTaskRepository.loadTaskByCategory(category);
     }
 
     // Create a getter for the tasks variable
@@ -65,8 +63,24 @@ public class MainViewModel extends AndroidViewModel {
 //            mTaskRepository.isTaskCompleted(completed);
 //    }
 
-    public LiveData<Integer> isTaskCompleted(long taskId) {
-        return mTaskRepository.isTaskCompleted(taskId);
+//    public LiveData<Integer> isTaskCompleted(long taskId) {
+//        return mTaskRepository.isTaskCompleted(taskId);
+//    }
+//
+//    public void insertTask(TaskEntry taskEntry) {
+//        mTaskRepository.insertTask(taskEntry);
+//    }
+//
+//    public void updateTask(TaskEntry taskEntry) {
+//        mTaskRepository.updateTask(taskEntry);
+//    }
+
+    public void deleteTask(TaskEntry taskEntry) {
+        mTaskRepository.deleteTask(taskEntry);
+    }
+
+    public void deleteAllTasks() {
+        mTaskRepository.deleteAllTask();
     }
 
 }
