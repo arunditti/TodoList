@@ -9,7 +9,7 @@ Todo List is an app that allows users to make list of tasks with the due date an
 
 ![layer 0-4](https://user-images.githubusercontent.com/8518978/47373605-30747600-d6ba-11e8-8a99-87d7f4b70242.png)
 ![layer 0-5](https://user-images.githubusercontent.com/8518978/47373612-323e3980-d6ba-11e8-916a-5f8c9dcfa295.png)
-![layer 0-6](https://user-images.githubusercontent.com/8518978/47373615-3407fd00-d6ba-11e8-8554-1a1c47eccf13.png)
+![layer 0-20](https://user-images.githubusercontent.com/8518978/47377972-be555e80-d6c4-11e8-803f-dbc8e7cea59f.png)
 
 ![layer 0-7](https://user-images.githubusercontent.com/8518978/47373623-35d1c080-d6ba-11e8-9581-08ad4384206a.png)
 ![layer 0-8](https://user-images.githubusercontent.com/8518978/47373627-379b8400-d6ba-11e8-8037-37779a7824ca.png)
