@@ -1,7 +1,7 @@
 # TodoList
-# Project Description
+### Project Description
 Todo List is an app that allows users to make list of tasks with the due date and priority. User can add a new task, update the existing task, delete task by swiping, delete all tasks from the menu, mark a task as completed, can get list of completed tasks, sort the tasks by priority and due date. User will also be able to list the tasks by category.
-# Screenshots
+### Screenshots
 ![layer 0](https://user-images.githubusercontent.com/8518978/47373592-2b172b80-d6ba-11e8-9ca9-dbb607ef82be.png)
 ![layer 0-2](https://user-images.githubusercontent.com/8518978/47373596-2ce0ef00-d6ba-11e8-8e94-09bbf46cd948.png)
 ![layer 0-3](https://user-images.githubusercontent.com/8518978/47373598-2eaab280-d6ba-11e8-8a9f-e3d44bcdb51f.png)
@@ -17,15 +17,15 @@ Todo List is an app that allows users to make list of tasks with the due date an
 ![layer 0-9](https://user-images.githubusercontent.com/8518978/47373635-39654780-d6ba-11e8-9c6e-662440aa50b6.png)
 ![layer 0-11](https://user-images.githubusercontent.com/8518978/47374270-8695e900-d6bb-11e8-8c97-b0f588359145.png)
 ![layer 0-19](https://user-images.githubusercontent.com/8518978/47377326-efcd2a80-d6c2-11e8-832c-8e936383377f.png)
-# Android Architecture Components
+### Android Architecture Components
 - Room
 - ViewModel
 - LiveData
-# Libraries Used
+### Libraries Used
 - RecyclerView
 - CardView
 - Butterknife
-# Google Play Services used
+### Google Play Services used
 - Firebase authentication for user sign in
 - Admob for interstitial ads
 - Firebase job dispatcher for the notification
