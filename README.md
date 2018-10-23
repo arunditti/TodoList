@@ -1,4 +1,5 @@
 # TodoList
+Created as Capstone project of Udacity's Android Developer Nanodegree course by Google
 ### Project Description
 Todo List is an app that allows users to make list of tasks with the due date and priority. User can add a new task, update the existing task, delete task by swiping, delete all tasks from the menu, mark a task as completed, can get list of completed tasks, sort the tasks by priority and due date. User will also be able to list the tasks by category.
 ### Screenshots
